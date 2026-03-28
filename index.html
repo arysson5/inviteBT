@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Convite — Casamento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="pagina">
+      <section class="cena" id="cena" aria-label="Abertura do convite">
+        <div
+          class="cena__particulas"
+          id="cenaParticulas"
+          aria-hidden="true"
+        ></div>
+        <div class="cena__mono-camada" aria-hidden="true">
+          <span class="cena__mono"></span>
+          <span class="cena__mono"></span>
+          <span class="cena__mono"></span>
+          <span class="cena__mono"></span>
+          <span class="cena__mono"></span>
+        </div>
+        <div class="cena__camada cena__camada--cartas">
+          <div class="cena__svg-mount" id="cartaSvgMount"></div>
+          <div class="cena__tilt cena__tilt--envelope" id="cartaEnvelopeTilt">
+            <div
+              class="cena__tilt-inner cena__tilt-inner--envelope"
+              id="cartaEnvelopeTiltInner"
+            >
+              <button
+                type="button"
+                class="cena__envelope-btn"
+                id="cartaFechadaBtn"
+                aria-label="Abrir o convite"
+              >
+                <span class="cena__envelope-frame">
+                  <img
+                    class="cena__envelope-img"
+                    src="src/carta_fechada.png"
+                    alt=""
+                    decoding="async"
+                    fetchpriority="high"
+                  />
+                </span>
+              </button>
+            </div>
+          </div>
+          <div class="cena__tilt" id="cartaTilt" aria-hidden="true">
+            <div class="cena__tilt-inner" id="cartaTiltInner">
+              <img
+                id="cartaPngImg"
+                src="src/carta%20final%20png.png"
+                alt="Convite Bruna e Thiago"
+                width="810"
+                height="1440"
+                decoding="async"
+              />
+            </div>
+          </div>
+        </div>
+        <img
+          id="cenaEnvelopePointer"
+          class="cena__envelope-pointer"
+          src="src/icons/pointer_178408.png"
+          alt=""
+          width="128"
+          height="128"
+          decoding="async"
+          aria-hidden="true"
+        />
+        <div class="cena__burst" id="cenaBurst" aria-hidden="true">
+          <img
+            id="burstMonograma"
+            src="src/Gemini_Generated_Image_46mktt46mktt46mk-removebg-preview.png"
+            alt=""
+            width="560"
+            height="280"
+            decoding="async"
+          />
+        </div>
+        <a
+          href="#conteudoHero"
+          class="cena__scroll-hint"
+          id="cenaScrollHint"
+        >
+          <span class="cena__scroll-hint__text">Descer</span>
+          <span class="cena__scroll-hint__seta" aria-hidden="true"></span>
+        </a>
+      </section>
+
+      <section class="conteudo" id="painelConvite" hidden>
+        <header class="conteudo__barra-marca" id="conteudoBarraMarca">
+          <img
+            class="conteudo__barra-marca-img"
+            src="src/Gemini_Generated_Image_46mktt46mktt46mk-removebg-preview.png"
+            alt="Monograma Brunna e Thiago"
+            width="560"
+            height="280"
+            decoding="async"
+          />
+        </header>
+        <div class="conteudo__hero" id="conteudoHero">
+          <div
+            class="conteudo__hero-slides"
+            id="heroSlides"
+            aria-hidden="true"
+          >
+            <img
+              class="conteudo__hero-slide is-active"
+              src="src/img/2t.jpg" srcset="src/img/2t.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              fetchpriority="high"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/5t.jpg" srcset="src/img/5t.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t3.jpg" srcset="src/img/t3.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t4.jpg" srcset="src/img/t4.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t6.jpg" srcset="src/img/t6.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t7.jpg" srcset="src/img/t7.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t8.jpg" srcset="src/img/t8.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t9.jpg" srcset="src/img/t9.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t10.jpg" srcset="src/img/t10.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t17.jpg" srcset="src/img/t17.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/13t.jpg" srcset="src/img/13t.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/14.jpg" srcset="src/img/14.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/15.jpg" srcset="src/img/15.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/16t.jpg" srcset="src/img/16t.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t12.jpg" srcset="src/img/t12.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+            <img
+              class="conteudo__hero-slide"
+              src="src/img/t%2018.jpg" srcset="src/img/t%2018.jpg 4000w" sizes="min(100vw, calc(min(92dvh, 960px) * 2 / 3))"
+              alt=""
+              width="4000"
+              height="6000"
+              decoding="async"
+              loading="lazy"
+            />
+          </div>
+          <div class="conteudo__mono-camada conteudo__mono-camada--hero" aria-hidden="true">
+            <span class="conteudo__mono"></span>
+            <span class="conteudo__mono"></span>
+            <span class="conteudo__mono"></span>
+            <span class="conteudo__mono"></span>
+            <span class="conteudo__mono"></span>
+            <span class="conteudo__mono"></span>
+          </div>
+          <div class="conteudo__hero-gradient" aria-hidden="true"></div>
+          <div class="conteudo__hero-texto">
+            <p class="conteudo__hero-citacao">
+              “Para que todos vejam e saibam,<br />
+              que a mão do Senhor fez isso”.
+            </p>
+            <p class="conteudo__hero-nomes">Brunna &amp; Thiago</p>
+          
+          </div>
+        </div>
+        <div class="conteudo__resto">
+          <div
+            class="conteudo__carousel"
+            id="conteudoScrollCarousel"
+            data-active="0"
+            aria-roledescription="álbum de fotos"
+            aria-label="Galeria de momentos"
+          >
+            <div class="conteudo__carousel-body">
+            <div
+              class="conteudo__mono-camada conteudo__mono-camada--carousel"
+              aria-hidden="true"
+            >
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+            </div>
+            <div class="conteudo__carousel-stage">
+            <p class="conteudo__carousel-titulo">Nossos momentos</p>
+            <div class="conteudo__carousel-shell">
+              <button
+                type="button"
+                class="conteudo__carousel-btn conteudo__carousel-btn--prev"
+                id="carouselBtnPrev"
+                aria-controls="carouselViewport"
+                aria-label="Foto anterior"
+              >
+                ‹
+              </button>
+              <div
+                class="conteudo__carousel-viewport"
+                id="carouselViewport"
+                tabindex="0"
+              >
+                <div class="conteudo__carousel-album" id="carouselAlbum">
+                  <div class="conteudo__carousel-base">
+                    <img
+                      id="carouselBaseImg"
+                      alt=""
+                      decoding="async"
+                      fetchpriority="high"
+                    />
+                  </div>
+                  <div
+                    class="conteudo__carousel-flip"
+                    id="carouselFlip"
+                    aria-hidden="true"
+                  >
+                    <div
+                      class="conteudo__carousel-flip-face conteudo__carousel-flip-face--front"
+                    >
+                      <img id="carouselFlipImg" alt="" decoding="async" />
+                    </div>
+                    <div
+                      class="conteudo__carousel-flip-face conteudo__carousel-flip-face--back"
+                    ></div>
+                  </div>
+                </div>
+                <div
+                  class="conteudo__carousel-track conteudo__carousel-track--source"
+                  id="carouselTrack"
+                  aria-hidden="true"
+                >
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/2t.jpg" srcset="src/img/2t.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      fetchpriority="high"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/5t.jpg" srcset="src/img/5t.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t3.jpg" srcset="src/img/t3.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t4.jpg" srcset="src/img/t4.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t6.jpg" srcset="src/img/t6.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t7.jpg" srcset="src/img/t7.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t8.jpg" srcset="src/img/t8.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t9.jpg" srcset="src/img/t9.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t10.jpg" srcset="src/img/t10.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t17.jpg" srcset="src/img/t17.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/13t.jpg" srcset="src/img/13t.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/14.jpg" srcset="src/img/14.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/15.jpg" srcset="src/img/15.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/16t.jpg" srcset="src/img/16t.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t12.jpg" srcset="src/img/t12.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="conteudo__carousel-slide">
+                    <img
+                      src="src/img/t%2018.jpg" srcset="src/img/t%2018.jpg 4000w" sizes="(max-width: 640px) calc(100vw - 5rem), min(30rem, 85vw)"
+                      alt=""
+                      width="4000"
+                      height="6000"
+                      decoding="async"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="conteudo__carousel-btn conteudo__carousel-btn--next"
+                id="carouselBtnNext"
+                aria-controls="carouselViewport"
+                aria-label="Próxima foto"
+              >
+                ›
+              </button>
+            </div>
+            <div class="conteudo__carousel-ui">
+              <div
+                class="conteudo__carousel-bar"
+                role="presentation"
+                aria-hidden="true"
+              >
+                <span class="conteudo__carousel-bar-fill" id="carouselBarFill"></span>
+              </div>
+              <p class="conteudo__carousel-hint">
+                Passe a página como num álbum — deslize ou use as setas
+              </p>
+              <span
+                class="conteudo__carousel-count"
+                id="scrollCarouselCount"
+                aria-live="polite"
+                >1 / 16</span>
+            </div>
+            </div>
+            </div>
+          </div>
+          <div class="conteudo__stack-wrap">
+            <div class="conteudo__mono-camada conteudo__mono-camada--resto" aria-hidden="true">
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+              <span class="conteudo__mono"></span>
+            </div>
+            <div class="conteudo__stack">
+            <section
+              class="conteudo__secao"
+              aria-labelledby="conteudoTituloData"
+            >
+              <h2 id="conteudoTituloData" class="conteudo__secao-titulo">
+                Data e horário
+              </h2>
+              <p class="conteudo__data-hora">
+                <time datetime="2026-06-13T13:00:00-03:00"
+                  >13 de junho de 2026 · 13h00</time>
+              </p>
+            </section>
+
+            <section
+              class="conteudo__secao"
+              aria-labelledby="conteudoTituloContagem"
+            >
+              <h2 id="conteudoTituloContagem" class="conteudo__secao-titulo">
+                Contagem regressiva
+              </h2>
+              <div
+                class="conteudo__countdown"
+                id="conteudoCountdown"
+                data-event-at="2026-06-13T13:00:00-03:00"
+                role="timer"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <div class="conteudo__countdown-celula">
+                  <span class="conteudo__countdown-num" id="cdDias">0</span>
+                  <span class="conteudo__countdown-unid">dias</span>
+                </div>
+                <div class="conteudo__countdown-celula">
+                  <span class="conteudo__countdown-num" id="cdHoras">0</span>
+                  <span class="conteudo__countdown-unid">horas</span>
+                </div>
+                <div class="conteudo__countdown-celula">
+                  <span class="conteudo__countdown-num" id="cdMin">0</span>
+                  <span class="conteudo__countdown-unid">min</span>
+                </div>
+                <div class="conteudo__countdown-celula">
+                  <span class="conteudo__countdown-num" id="cdSeg">0</span>
+                  <span class="conteudo__countdown-unid">seg</span>
+                </div>
+              </div>
+              <p class="conteudo__countdown-msg" id="cdMsg" hidden></p>
+            </section>
+
+            <section
+              class="conteudo__secao conteudo__secao--mapa"
+              aria-labelledby="conteudoTituloLocal"
+            >
+              <h2 id="conteudoTituloLocal" class="conteudo__secao-titulo">
+                Local
+              </h2>
+              <p class="conteudo__local-nome">Buffet Fest Vip Eventos</p>
+              <div class="conteudo__mapa-wrap">
+                <iframe
+                  class="conteudo__mapa-iframe"
+                  title="Mapa — Buffet Fest Vip Eventos"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3653.7535833709185!2d-46.758575623887644!3d-23.684768666139114!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce539fb5592e09%3A0x8889d018e37f5953!2sBuffet%20Fest%20Vip%20Eventos!5e0!3m2!1spt-BR!2sbr!4v1774727026435!5m2!1spt-BR!2sbr"
+                  width="600"
+                  height="450"
+                  style="border: 0"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            </section>
+
+            <div
+              class="conteudo__festa"
+              id="conteudoFesta"
+              aria-label="Detalhes da celebração"
+            >
+              <div class="conteudo__festa-decor" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <section
+                class="conteudo__secao conteudo__secao--festa conteudo__reveal"
+                aria-labelledby="conteudoTituloTraje"
+              >
+                <h2
+                  id="conteudoTituloTraje"
+                  class="conteudo__secao-titulo conteudo__secao-titulo--festa"
+                >
+                  Traje sugerido
+                </h2>
+                <p class="conteudo__festa-lead">
+                  O traje sugerido é <strong>esporte fino</strong>: elegante e
+                  confortável, sem a formalidade do black tie — ideal para
+                  curtir cada momento com a gente.
+                </p>
+                <p class="conteudo__festa-nota">
+                  Pense em terno ou blazer com calça social, vestido ou conjunto
+                  arrumado. O mais importante é você se sentir à vontade para
+                  dançar e celebrar.
+                </p>
+              </section>
+
+              <section
+                class="conteudo__secao conteudo__secao--festa conteudo__reveal"
+                aria-labelledby="conteudoTituloRitmo"
+              >
+                <h2
+                  id="conteudoTituloRitmo"
+                  class="conteudo__secao-titulo conteudo__secao-titulo--festa"
+                >
+                  Ritmo da festa
+                </h2>
+                <p class="conteudo__festa-lead conteudo__festa-lead--curto">
+                  Toque nos horários para ver o que vem a seguir — como um
+                  programa de salão.
+                </p>
+                <div class="conteudo__timeline">
+                  <details class="conteudo__timeline-slot">
+                    <summary class="conteudo__timeline-sum">
+                      <span class="conteudo__timeline-hora">12h30</span>
+                      <span class="conteudo__timeline-titulo"
+                        >Recepção dos convidados</span
+                      >
+                    </summary>
+                    <p class="conteudo__timeline-txt">
+                      Boas-vindas, drinks e música ambiente. Respire fundo: a
+                      festa está só começando.
+                    </p>
+                  </details>
+                  <details class="conteudo__timeline-slot">
+                    <summary class="conteudo__timeline-sum">
+                      <span class="conteudo__timeline-hora">13h00</span>
+                      <span class="conteudo__timeline-titulo">Cerimônia</span>
+                    </summary>
+                    <p class="conteudo__timeline-txt">
+                      O “sim” no altar — o momento em que tudo o que
+                      planejamos vira realidade, com vocês ao nosso redor.
+                    </p>
+                  </details>
+                  <details class="conteudo__timeline-slot">
+                    <summary class="conteudo__timeline-sum">
+                      <span class="conteudo__timeline-hora">14h00</span>
+                      <span class="conteudo__timeline-titulo"
+                        >Brinde &amp; jantar</span
+                      >
+                    </summary>
+                    <p class="conteudo__timeline-txt">
+                      Celebração à mesa, risadas e aquela sensação de estar em
+                      família.
+                    </p>
+                  </details>
+                  <details class="conteudo__timeline-slot">
+                    <summary class="conteudo__timeline-sum">
+                      <span class="conteudo__timeline-hora">16h00</span>
+                      <span class="conteudo__timeline-titulo"
+                        >Pista aberta</span
+                      >
+                    </summary>
+                    <p class="conteudo__timeline-txt">
+                      Sapato confortável à mão: a noite é para dançar até o
+                      último confete (imaginário).
+                    </p>
+                  </details>
+                </div>
+              </section>
+
+              <section
+                class="conteudo__secao conteudo__secao--festa conteudo__secao--rsvp conteudo__reveal"
+                aria-labelledby="conteudoTituloRsvp"
+              >
+                <h2
+                  id="conteudoTituloRsvp"
+                  class="conteudo__secao-titulo conteudo__secao-titulo--festa"
+                >
+                  Confirmação de presença
+                </h2>
+                <p class="conteudo__festa-lead conteudo__festa-lead--curto">
+                  Abra a página dedicada para nos avisar se você vem celebrar
+                  com a gente.
+                </p>
+                <div class="conteudo__festa-cta-wrap">
+                  <a class="conteudo__festa-cta" href="rsvp.html"
+                    >Confirmar presença</a
+                  >
+                </div>
+              </section>
+
+              <blockquote class="conteudo__festa-quote conteudo__reveal">
+                <p lang="pt-BR">
+                  “Portanto, o que Deus uniu, ninguém separa.”
+                </p>
+                <footer>Mateus 19:6</footer>
+              </blockquote>
+            </div>
+
+            <footer class="conteudo__rodape-marca" aria-label="Monograma">
+              <span class="conteudo__rodape-marca__linha" aria-hidden="true"></span>
+              <img
+                class="conteudo__rodape-marca-img"
+                src="src/Gemini_Generated_Image_46mktt46mktt46mk-removebg-preview.png"
+                alt=""
+                width="560"
+                height="280"
+                decoding="async"
+                loading="lazy"
+              />
+            </footer>
+          </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://assets.codepen.io/16327/DrawSVGPlugin3.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
