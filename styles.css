@@ -786,6 +786,7 @@ html:has(.conteudo__barra-marca--visivel) {
   display: block;
   opacity: 0;
   z-index: 1;
+  -webkit-transition: opacity 1.35s cubic-bezier(0.45, 0, 0.15, 1);
   transition: opacity 1.35s cubic-bezier(0.45, 0, 0.15, 1);
   image-rendering: auto;
 }
@@ -1099,7 +1100,7 @@ html:has(.conteudo__barra-marca--visivel) {
     0 0 0 1px rgba(107, 45, 60, 0.1);
   aspect-ratio: 3 / 4;
   max-height: min(80dvh, 900px);
-  touch-action: pan-y;
+  touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
   outline: none;
@@ -1119,8 +1120,11 @@ html:has(.conteudo__barra-marca--visivel) {
   z-index: 2;
   border-radius: inherit;
   /* Perspectiva longa + ligeiro deslocamento = virada tipo álbum, sem exagero 3D */
+  -webkit-perspective: clamp(1280px, 175vw, 3000px);
   perspective: clamp(1280px, 175vw, 3000px);
   perspective-origin: 48% 48%;
+  -webkit-perspective-origin: 48% 48%;
+  transform: translateZ(0);
 }
 
 .conteudo__carousel-base {
@@ -1144,12 +1148,19 @@ html:has(.conteudo__barra-marca--visivel) {
   object-fit: contain;
   object-position: center center;
   image-rendering: auto;
+  -webkit-transition: opacity 0.38s ease;
+  transition: opacity 0.38s ease;
+}
+
+.conteudo__carousel-viewport--plano #carouselFlip {
+  display: none !important;
 }
 
 .conteudo__carousel-flip {
   position: absolute;
   inset: 0;
   z-index: 3;
+  -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   transform: rotateY(0deg);
   opacity: 0;
@@ -1215,11 +1226,13 @@ html:has(.conteudo__barra-marca--visivel) {
 }
 
 .conteudo__carousel-flip.is-next.is-flip-play {
+  -webkit-animation: folhaVirarProxima 1.56s forwards;
   animation: folhaVirarProxima 1.56s forwards;
   will-change: transform;
 }
 
 .conteudo__carousel-flip.is-prev.is-flip-play {
+  -webkit-animation: folhaVirarAnterior 1.56s forwards;
   animation: folhaVirarAnterior 1.56s forwards;
   will-change: transform;
 }
@@ -1563,13 +1576,19 @@ html:has(.conteudo__barra-marca--visivel) {
   position: absolute;
   top: -14px;
   opacity: 0;
+  -webkit-animation-name: cenaGrainFall;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
   animation-name: cenaGrainFall;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   will-change: transform, opacity;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .cena__grain--lento {
+  -webkit-animation-name: cenaGrainFallLento;
   animation-name: cenaGrainFallLento;
 }
 
@@ -1605,9 +1624,10 @@ html:has(.conteudo__barra-marca--visivel) {
   --op: 0.68;
 }
 
-@keyframes cenaGrainFall {
+@-webkit-keyframes cenaGrainFall {
   0% {
-    transform: translate3d(0, -12vh, 0) rotate(0deg);
+    -webkit-transform: translate3d(0, -12dvh, 0) rotate(0deg);
+    transform: translate3d(0, -12dvh, 0) rotate(0deg);
     opacity: 0;
   }
   6% {
@@ -1617,14 +1637,35 @@ html:has(.conteudo__barra-marca--visivel) {
     opacity: var(--op, 0.4);
   }
   100% {
-    transform: translate3d(var(--dx, 18px), 115vh, 0) rotate(var(--rot, 1turn));
+    -webkit-transform: translate3d(var(--dx, 18px), 118dvh, 0)
+      rotate(var(--rot, 1turn));
+    transform: translate3d(var(--dx, 18px), 118dvh, 0) rotate(var(--rot, 1turn));
     opacity: 0;
   }
 }
 
-@keyframes cenaGrainFallLento {
+@keyframes cenaGrainFall {
   0% {
-    transform: translate3d(calc(var(--dx, 0px) * -0.4), -8vh, 0) rotate(0deg);
+    transform: translate3d(0, -12dvh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  6% {
+    opacity: var(--op, 0.4);
+  }
+  94% {
+    opacity: var(--op, 0.4);
+  }
+  100% {
+    transform: translate3d(var(--dx, 18px), 118dvh, 0) rotate(var(--rot, 1turn));
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes cenaGrainFallLento {
+  0% {
+    -webkit-transform: translate3d(calc(var(--dx, 0px) * -0.4), -8dvh, 0)
+      rotate(0deg);
+    transform: translate3d(calc(var(--dx, 0px) * -0.4), -8dvh, 0) rotate(0deg);
     opacity: 0;
   }
   10% {
@@ -1634,7 +1675,27 @@ html:has(.conteudo__barra-marca--visivel) {
     opacity: calc(var(--op, 0.4) * 0.85);
   }
   100% {
-    transform: translate3d(calc(var(--dx, 18px) * 1.1), 112vh, 0)
+    -webkit-transform: translate3d(calc(var(--dx, 18px) * 1.1), 118dvh, 0)
+      rotate(calc(var(--rot, 360deg) * 0.65));
+    transform: translate3d(calc(var(--dx, 18px) * 1.1), 118dvh, 0)
+      rotate(calc(var(--rot, 360deg) * 0.65));
+    opacity: 0;
+  }
+}
+
+@keyframes cenaGrainFallLento {
+  0% {
+    transform: translate3d(calc(var(--dx, 0px) * -0.4), -8dvh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: calc(var(--op, 0.4) * 0.85);
+  }
+  90% {
+    opacity: calc(var(--op, 0.4) * 0.85);
+  }
+  100% {
+    transform: translate3d(calc(var(--dx, 18px) * 1.1), 118dvh, 0)
       rotate(calc(var(--rot, 360deg) * 0.65));
     opacity: 0;
   }

@@ -24,6 +24,9 @@ let tiltLeaveHandler = null;
 let conviteAberto = false;
 let audioViolino = null;
 
+/** Chamado quando o painel do convite fica visível (MutationObserver em mobile é frágil). */
+let notificarHeroPainelVisivel = () => {};
+
 const NS = "http://www.w3.org/2000/svg";
 
 const CONTORNO_ICONE_SVG = encodeURI(
@@ -69,6 +72,32 @@ function configurarBarraMarcaAposPrimeiroScroll() {
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/** Telemóveis / tablets sem hover fiável — carrossel 3D e DrawSVG costumam falhar. */
+function isModoToqueSemHover() {
+  try {
+    return window.matchMedia("(hover: none)").matches;
+  } catch {
+    return false;
+  }
+}
+
+function prepararTracoSvgNativo(path) {
+  try {
+    const len = path.getTotalLength();
+    if (!len || !Number.isFinite(len)) return 0;
+    path.style.strokeDasharray = String(len);
+    path.style.strokeDashoffset = String(len);
+    return len;
+  } catch {
+    return 0;
+  }
+}
+
+function usarDesenhoTracoNativo(pluginOk) {
+  if (!pluginOk) return true;
+  return isModoToqueSemHover();
 }
 
 function polygonParaPathD(el) {
@@ -175,8 +204,11 @@ function criarGrainParticula(host, i, seed) {
   if (lento) el.classList.add("cena__grain--lento");
   el.style.left = `${(i * 11 + Math.random() * 62) % 100}%`;
   const baseDur = lento ? 18 + Math.random() * 22 : 9 + Math.random() * 12;
+  const delay = -(Math.random() * 28);
   el.style.animationDuration = `${baseDur}s`;
-  el.style.animationDelay = `${-(Math.random() * 28)}s`;
+  el.style.animationDelay = `${delay}s`;
+  el.style.webkitAnimationDuration = `${baseDur}s`;
+  el.style.webkitAnimationDelay = `${delay}s`;
   const g = 0.55 + Math.random() * 1.2;
   el.style.setProperty("--g", String(g));
   el.style.setProperty("--dx", `${(Math.random() - 0.5) * 56}px`);
@@ -192,7 +224,7 @@ function iniciarParticulasCena() {
   host.innerHTML = "";
   host.classList.add("cena__particulas--ativa");
 
-  const total = 102;
+  const total = isModoToqueSemHover() ? 52 : 102;
   for (let i = 0; i < total; i++) {
     criarGrainParticula(host, i);
   }
@@ -205,7 +237,7 @@ function reforcarParticulasAposAbertura() {
   if (!host || host.dataset.reforco) return;
   host.dataset.reforco = "1";
   const base = host.querySelectorAll(".cena__grain").length;
-  const extra = 48;
+  const extra = isModoToqueSemHover() ? 22 : 48;
   for (let j = 0; j < extra; j++) {
     criarGrainParticula(host, base + j, Math.random());
   }
@@ -444,6 +476,7 @@ function onCliqueAbrirConvite() {
     reforcarParticulasAposAbertura();
     hint?.classList.add("cena__scroll-hint--visivel");
     painel?.removeAttribute("hidden");
+    notificarHeroPainelVisivel();
     if (!reduzir) {
       iniciarTiltCursor();
       iniciarDestaqueCartaESelo();
@@ -458,22 +491,35 @@ function configurarCliqueEnvelope() {
 }
 
 async function runSequencia() {
+  if (typeof window.gsap === "undefined") {
+    iniciarParticulasCena();
+    mostrarEnvelopeConvite();
+    return;
+  }
+
   const mount = cartaSvgMount();
   const tilt = cartaTilt();
   const envTilt = cartaEnvelopeTilt();
   const burst = cenaBurst();
   const ptr = envelopePointer();
 
-  gsap.set(mount, { autoAlpha: 0, scale: 0.92 });
-  gsap.set(tilt, { autoAlpha: 0, scale: 0.97 });
-  if (tilt) tilt.style.pointerEvents = "none";
-  if (envTilt) gsap.set(envTilt, { autoAlpha: 0, scale: 0.97 });
-  if (ptr) gsap.set(ptr, { autoAlpha: 0 });
-  if (burst) gsap.set(burst, { autoAlpha: 0, visibility: "hidden" });
+  try {
+    if (mount) gsap.set(mount, { autoAlpha: 0, scale: 0.92 });
+    gsap.set(tilt, { autoAlpha: 0, scale: 0.97 });
+    if (tilt) tilt.style.pointerEvents = "none";
+    if (envTilt) gsap.set(envTilt, { autoAlpha: 0, scale: 0.97 });
+    if (ptr) gsap.set(ptr, { autoAlpha: 0 });
+    if (burst) gsap.set(burst, { autoAlpha: 0, visibility: "hidden" });
+  } catch {
+    iniciarParticulasCena();
+    mostrarEnvelopeConvite();
+    return;
+  }
 
   const env = await montarAliancasSvg(mount);
   const reduzir = prefersReducedMotion();
   const pluginOk = typeof window.DrawSVGPlugin !== "undefined";
+  const tracoNativo = usarDesenhoTracoNativo(pluginOk);
 
   const pausaFundo = reduzir ? 0.35 : 1.05;
   const fadeTraco = reduzir ? 0.22 : 0.55;
@@ -491,7 +537,25 @@ async function runSequencia() {
 
   const { tracos } = env;
 
-  if (pluginOk && !reduzir) {
+  if (!reduzir && tracoNativo) {
+    tracos.forEach((p) => prepararTracoSvgNativo(p));
+    tl.set(mount, { autoAlpha: 1, scale: 1 });
+    tracos.forEach((p, i) => {
+      const dur = duracaoDrawPath(p);
+      const pos =
+        i === 0 ? undefined : `-=${Math.min(0.5, dur * 0.22)}`;
+      tl.to(
+        p,
+        { strokeDashoffset: 0, duration: dur, ease: "power1.inOut" },
+        pos
+      );
+    });
+    tl.to(tracos, {
+      autoAlpha: 0,
+      duration: fadeTraco,
+      ease: "power2.in",
+    });
+  } else if (pluginOk && !reduzir) {
     gsap.registerPlugin(window.DrawSVGPlugin);
     gsap.set(tracos, { drawSVG: "0%" });
     tl.set(mount, { autoAlpha: 1, scale: 1 });
@@ -537,11 +601,17 @@ const HERO_SLIDE_INTERVAL_MS = 5000;
 
 function configurarHeroSlideshow() {
   const root = document.getElementById("heroSlides");
-  if (!root) return;
+  if (!root) {
+    notificarHeroPainelVisivel = () => {};
+    return;
+  }
 
   const slides = root.querySelectorAll(".conteudo__hero-slide");
   const n = slides.length;
-  if (n <= 1) return;
+  if (n <= 1) {
+    notificarHeroPainelVisivel = () => {};
+    return;
+  }
 
   const reduzir = prefersReducedMotion();
   let cur = 0;
@@ -581,12 +651,22 @@ function configurarHeroSlideshow() {
     }, HERO_SLIDE_INTERVAL_MS);
   }
 
+  notificarHeroPainelVisivel = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => iniciarTimer());
+    });
+  };
+
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       limparTimer();
     } else {
       iniciarTimer();
     }
+  });
+
+  window.addEventListener("pageshow", (ev) => {
+    if (ev.persisted) notificarHeroPainelVisivel();
   });
 
   const painel = painelConvite();
@@ -644,6 +724,9 @@ function configurarScrollCarousel() {
   if (!n) return;
 
   const reduzir = prefersReducedMotion();
+  const modoPlano = !reduzir && isModoToqueSemHover();
+  if (modoPlano) viewport.classList.add("conteudo__carousel-viewport--plano");
+
   let index = 0;
   let panStartX = 0;
   let panActive = false;
@@ -705,10 +788,37 @@ function configurarScrollCarousel() {
     atualizarChrome();
   }
 
+  const MS_CROSSFADE_CARROSSEL = 380;
+
+  function trocarPlano(delta) {
+    const novoIndex = Math.max(0, Math.min(n - 1, index + delta));
+    if (novoIndex === index || busy) return;
+    const img = imagemDoSlide(slides[novoIndex]);
+    if (!img) return;
+    busy = true;
+    root.setAttribute("aria-busy", "true");
+    atualizarChrome();
+    baseImg.style.opacity = "0";
+    window.setTimeout(() => {
+      copiarAtributosImg(img, baseImg);
+      requestAnimationFrame(() => {
+        baseImg.style.opacity = "1";
+      });
+      index = novoIndex;
+      busy = false;
+      root.removeAttribute("aria-busy");
+      atualizarChrome();
+    }, MS_CROSSFADE_CARROSSEL);
+  }
+
   function virarProxima() {
     if (busy || index >= n - 1) return;
     if (reduzir) {
       irInstantaneo(1);
+      return;
+    }
+    if (modoPlano) {
+      trocarPlano(1);
       return;
     }
 
@@ -742,8 +852,8 @@ function configurarScrollCarousel() {
 
     function aoFimAnim(e) {
       if (e.target !== flip) return;
-      const nome = e.animationName || "";
-      if (!String(nome).includes("folhaVirar")) return;
+      const nome = String(e.animationName || "");
+      if (!/folhaVirar/i.test(nome)) return;
       window.clearTimeout(tmo);
       flip.removeEventListener("animationend", aoFimAnim);
       finalizarVirada(destinoIndex);
@@ -755,6 +865,10 @@ function configurarScrollCarousel() {
     if (busy || index <= 0) return;
     if (reduzir) {
       irInstantaneo(-1);
+      return;
+    }
+    if (modoPlano) {
+      trocarPlano(-1);
       return;
     }
 
@@ -788,8 +902,8 @@ function configurarScrollCarousel() {
 
     function aoFimAnim(e) {
       if (e.target !== flip) return;
-      const nome = e.animationName || "";
-      if (!String(nome).includes("folhaVirar")) return;
+      const nome = String(e.animationName || "");
+      if (!/folhaVirar/i.test(nome)) return;
       window.clearTimeout(tmo);
       flip.removeEventListener("animationend", aoFimAnim);
       finalizarVirada(destinoIndex);

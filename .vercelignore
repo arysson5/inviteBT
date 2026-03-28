@@ -1,0 +1,3 @@
+# Não enviar para a Vercel (scripts locais / auxiliares)
+scripts/
+**/*.py

@@ -1,0 +1,5 @@
+{
+  "name": "casamento-convite",
+  "private": true,
+  "description": "Convite estático (HTML/CSS/JS) — sem build; compatível com deploy na Vercel."
+}
