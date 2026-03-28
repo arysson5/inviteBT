@@ -1,0 +1,2 @@
+# Texto normalizado com LF no repositório (deploy Linux/Vercel, menos ruído no Windows)
+* text=auto eol=lf

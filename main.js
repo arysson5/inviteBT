@@ -87,12 +87,35 @@ function prepararTracoSvgNativo(path) {
   try {
     const len = path.getTotalLength();
     if (!len || !Number.isFinite(len)) return 0;
-    path.style.strokeDasharray = String(len);
-    path.style.strokeDashoffset = String(len);
+    path.style.removeProperty("stroke-dasharray");
+    path.style.removeProperty("stroke-dashoffset");
+    path.setAttribute("stroke-dasharray", String(len));
+    path.setAttribute("stroke-dashoffset", String(len));
     return len;
   } catch {
     return 0;
   }
+}
+
+/**
+ * WebKit (sobretudo iOS) devolve getTotalLength() === 0 se o SVG estiver sob
+ * visibility:hidden (ex.: GSAP autoAlpha no mount). Torna o alvo medível sem o mostrar.
+ */
+function prepararMountParaMedirTracos(mount) {
+  if (!mount) return;
+  gsap.set(mount, { visibility: "visible", opacity: 0 });
+  void mount.offsetWidth;
+}
+
+function tracosComDashValido(tracos) {
+  return tracos.every((p) => {
+    try {
+      const len = p.getTotalLength();
+      return len > 0 && Number.isFinite(len);
+    } catch {
+      return false;
+    }
+  });
 }
 
 function usarDesenhoTracoNativo(pluginOk) {
@@ -538,23 +561,64 @@ async function runSequencia() {
   const { tracos } = env;
 
   if (!reduzir && tracoNativo) {
+    prepararMountParaMedirTracos(mount);
+    void mount.offsetWidth;
     tracos.forEach((p) => prepararTracoSvgNativo(p));
-    tl.set(mount, { autoAlpha: 1, scale: 1 });
-    tracos.forEach((p, i) => {
-      const dur = duracaoDrawPath(p);
-      const pos =
-        i === 0 ? undefined : `-=${Math.min(0.5, dur * 0.22)}`;
-      tl.to(
-        p,
-        { strokeDashoffset: 0, duration: dur, ease: "power1.inOut" },
-        pos
+    if (!tracosComDashValido(tracos)) {
+      void mount.offsetWidth;
+      tracos.forEach((p) => prepararTracoSvgNativo(p));
+    }
+
+    if (tracosComDashValido(tracos)) {
+      tl.set(mount, { autoAlpha: 1, scale: 1 });
+      tracos.forEach((p, i) => {
+        const dur = duracaoDrawPath(p);
+        const pos =
+          i === 0 ? undefined : `-=${Math.min(0.5, dur * 0.22)}`;
+        tl.to(
+          p,
+          {
+            duration: dur,
+            ease: "power1.inOut",
+            attr: { "stroke-dashoffset": 0 },
+          },
+          pos
+        );
+      });
+      tl.to(tracos, {
+        autoAlpha: 0,
+        duration: fadeTraco,
+        ease: "power2.in",
+      });
+    } else if (pluginOk) {
+      gsap.registerPlugin(window.DrawSVGPlugin);
+      gsap.set(tracos, { drawSVG: "0%" });
+      tl.set(mount, { autoAlpha: 1, scale: 1 });
+      tracos.forEach((p, i) => {
+        const dur = duracaoDrawPath(p);
+        const pos =
+          i === 0 ? undefined : `-=${Math.min(0.5, dur * 0.22)}`;
+        tl.to(p, { drawSVG: "100%", duration: dur, ease: "power1.inOut" }, pos);
+      });
+      tl.to(tracos, {
+        autoAlpha: 0,
+        duration: fadeTraco,
+        ease: "power2.in",
+      });
+    } else {
+      gsap.set(tracos, { autoAlpha: 1 });
+      tl.set(mount, { autoAlpha: 1, scale: 1 });
+      tl.fromTo(
+        tracos,
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.75 }
       );
-    });
-    tl.to(tracos, {
-      autoAlpha: 0,
-      duration: fadeTraco,
-      ease: "power2.in",
-    });
+      tl.to(tracos, {
+        autoAlpha: 0,
+        duration: fadeTraco,
+        ease: "power2.in",
+      });
+    }
   } else if (pluginOk && !reduzir) {
     gsap.registerPlugin(window.DrawSVGPlugin);
     gsap.set(tracos, { drawSVG: "0%" });
