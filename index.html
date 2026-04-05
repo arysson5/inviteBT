@@ -737,6 +737,9 @@
                   <a class="conteudo__festa-cta" href="rsvp.html"
                     >Confirmar presença</a
                   >
+                  <a class="conteudo__festa-cta" href="presentes.html"
+                    >Lista de presentes</a
+                  >
                 </div>
               </section>
 
@@ -766,8 +769,23 @@
       </section>
     </main>
 
+    <!-- Áudio no DOM: iOS/Safari costumam falhar com `new Audio()` fora de elemento visível -->
+    <audio
+      id="violinoAudio"
+      preload="auto"
+      playsinline
+      webkit-playsinline
+      aria-hidden="true"
+    >
+      <source
+        src="src/audio/violino-instrumental---kalvert-richard-felipe-rodrigues.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://assets.codepen.io/16327/DrawSVGPlugin3.min.js"></script>
+    <script src="admin-trigger.js"></script>
     <script src="main.js"></script>
   </body>
 </html>

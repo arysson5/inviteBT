@@ -636,7 +636,9 @@ html:has(.conteudo__barra-marca--visivel) {
 
 .conteudo__festa-cta-wrap {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 0.65rem;
   margin: 0.55rem 0 0;
   padding: 0.15rem 0.5rem 0.2rem;
 }
@@ -1576,6 +1578,7 @@ html:has(.conteudo__barra-marca--visivel) {
   position: absolute;
   top: -14px;
   opacity: 0;
+  pointer-events: none;
   -webkit-animation-name: cenaGrainFall;
   -webkit-animation-timing-function: linear;
   -webkit-animation-iteration-count: infinite;
@@ -1751,6 +1754,7 @@ html:has(.conteudo__barra-marca--visivel) {
     center / contain no-repeat;
   opacity: 0.065;
   filter: saturate(0.92);
+  pointer-events: none;
 }
 
 .cena__mono:nth-child(1) {
@@ -1809,6 +1813,8 @@ html:has(.conteudo__barra-marca--visivel) {
 .cena__tilt--envelope {
   position: relative;
   z-index: 3;
+  /* Sombra no wrapper: filter no inner + rotateY no filho desalinha hit-test no Chrome/Edge */
+  filter: drop-shadow(0 14px 32px rgba(42, 18, 24, 0.12));
 }
 
 .cena__envelope-btn {
@@ -1928,6 +1934,8 @@ html:has(.conteudo__barra-marca--visivel) {
 .cena__tilt-inner.cena__tilt-inner--envelope {
   aspect-ratio: 493 / 447;
   max-width: min(360px, 90vw);
+  filter: none;
+  will-change: transform;
 }
 
 .cena__tilt-inner--destaque {
@@ -2172,4 +2180,720 @@ html:has(.conteudo__barra-marca--visivel) {
   text-transform: uppercase;
   text-align: center;
   color: var(--dourado-escuro);
+}
+
+.pagina-interna__cartao--form {
+  text-align: left;
+}
+
+.pagina-interna__cartao--form .rsvp-intro,
+.pagina-interna__cartao--form .rsvp-footnote {
+  text-align: left;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: rgba(42, 18, 24, 0.82);
+  margin: 0 0 1rem;
+}
+
+.pagina-interna__cartao--form .rsvp-footnote {
+  margin-top: 1.15rem;
+  margin-bottom: 0;
+  font-size: 0.75rem;
+  color: rgba(42, 18, 24, 0.65);
+}
+
+.pagina-interna__cartao--form .rsvp-footnote code {
+  font-size: 0.7rem;
+  word-break: break-all;
+}
+
+.pagina-interna__cartao--form .rsvp-footnote--convite {
+  font-style: italic;
+  color: rgba(42, 18, 24, 0.58);
+}
+
+.rsvp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rsvp-fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.rsvp-legend {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--marsala-suave);
+  padding: 0;
+  margin-bottom: 0.35rem;
+}
+
+.rsvp-hint {
+  margin: 0 0 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(42, 18, 24, 0.68);
+}
+
+.rsvp-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(42, 18, 24, 0.72);
+}
+
+.rsvp-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.55rem 0.65rem;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.9rem;
+  border: 1px solid rgba(201, 169, 98, 0.45);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  color: rgba(42, 18, 24, 0.95);
+}
+
+.rsvp-input:focus-visible {
+  outline: 2px solid var(--dourado);
+  outline-offset: 2px;
+}
+
+.rsvp-input--narrow {
+  max-width: 6rem;
+}
+
+.rsvp-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: rgba(42, 18, 24, 0.78);
+  cursor: pointer;
+}
+
+.rsvp-check input {
+  margin-top: 0.2rem;
+  accent-color: var(--marsala-suave);
+}
+
+.rsvp-submit {
+  margin-top: 0.35rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    var(--marsala-suave) 0%,
+    var(--marsala) 100%
+  );
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(143, 61, 79, 0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rsvp-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(143, 61, 79, 0.28);
+}
+
+.rsvp-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.rsvp-message {
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.rsvp-message--success {
+  background: rgba(212, 237, 218, 0.95);
+  border: 1px solid rgba(195, 230, 203, 0.9);
+  color: #155724;
+}
+
+.rsvp-message--error {
+  background: rgba(248, 215, 218, 0.95);
+  border: 1px solid rgba(245, 198, 203, 0.9);
+  color: #721c24;
+}
+
+.rsvp-message--info {
+  background: rgba(204, 229, 255, 0.9);
+  border: 1px solid rgba(153, 209, 255, 0.85);
+  color: #004085;
+}
+
+/* --- Lista de presentes --- */
+.pagina-interna--presentes {
+  max-width: 42rem;
+}
+
+.presentes-gate {
+  text-align: center;
+}
+
+.presentes-gate p {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(42, 18, 24, 0.82);
+}
+
+a.presentes-gate__cta.rsvp-submit {
+  display: block;
+  width: 100%;
+  max-width: 18rem;
+  margin: 0 auto;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.presentes-gate__recover {
+  margin-top: 1.5rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid rgba(201, 169, 98, 0.35);
+  text-align: left;
+}
+
+.presentes-gate__recover-title {
+  margin: 0 0 0.5rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--marsala-suave);
+  line-height: 1.35;
+}
+
+.presentes-gate__recover-hint {
+  margin: 0 0 1rem;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: rgba(42, 18, 24, 0.78);
+}
+
+.presentes-recover-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 22rem;
+  margin: 0 auto;
+}
+
+.presentes-recover-form .rsvp-submit {
+  margin-top: 0.25rem;
+}
+
+.presentes-recover-err {
+  margin: 0.75rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--marsala);
+  text-align: center;
+}
+
+.presentes-meu-hint {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: rgba(42, 18, 24, 0.72);
+  margin: 0 0 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(255, 252, 248, 0.95);
+  border: 1px solid rgba(201, 169, 98, 0.4);
+  text-align: left;
+}
+
+.presentes-userbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.presentes-userbar__hello {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: rgba(42, 18, 24, 0.85);
+  flex: 1 1 12rem;
+}
+
+.presentes-userbar__out {
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 169, 98, 0.45);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--marsala-suave);
+  cursor: pointer;
+}
+
+.presentes-userbar__out:hover {
+  border-color: var(--dourado);
+  color: var(--marsala);
+}
+
+.presentes-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: rgba(42, 18, 24, 0.75);
+  margin-bottom: 0.75rem;
+}
+
+.presentes-dica {
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: rgba(42, 18, 24, 0.65);
+  margin: 0 0 1rem;
+  text-align: left;
+}
+
+.presentes-load-err {
+  color: #721c24;
+  font-size: 0.86rem;
+  margin: 0.5rem 0 0;
+}
+
+.presentes-empty {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(42, 18, 24, 0.7);
+  margin: 1rem 0;
+}
+
+.presentes-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 560px) {
+  .presentes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.presentes-card {
+  position: relative;
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(252, 248, 244, 0.96) 100%
+  );
+  border: 1px solid rgba(201, 169, 98, 0.28);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(143, 61, 79, 0.07);
+}
+
+.presentes-card__badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(201, 169, 98, 0.35);
+  color: var(--marsala-suave);
+}
+
+.presentes-card__badge--eu {
+  background: rgba(212, 237, 218, 0.95);
+  border-color: rgba(195, 230, 203, 0.9);
+  color: #155724;
+}
+
+.presentes-card__badge--fora {
+  background: rgba(248, 248, 248, 0.95);
+  color: rgba(42, 18, 24, 0.55);
+}
+
+.presentes-card__media {
+  aspect-ratio: 16 / 10;
+  background: rgba(252, 248, 244, 0.9);
+}
+
+.presentes-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.presentes-card__body {
+  padding: 0.85rem 0.95rem 1rem;
+}
+
+.presentes-card__title {
+  margin: 0 0 0.35rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--marsala-suave);
+  line-height: 1.25;
+}
+
+.presentes-card__price {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(42, 18, 24, 0.65);
+  margin-bottom: 0.65rem;
+}
+
+.presentes-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  align-items: stretch;
+}
+
+.presentes-card__btn {
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.65rem;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(
+    135deg,
+    var(--marsala-suave) 0%,
+    var(--marsala) 100%
+  );
+  color: #fff;
+  cursor: pointer;
+}
+
+.presentes-card__btn--ghost {
+  background: transparent;
+  color: var(--marsala-suave);
+  border: 1px solid rgba(201, 169, 98, 0.5);
+}
+
+.presentes-card__link {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--marsala-suave);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.presentes-card__nao {
+  font-size: 0.75rem;
+  color: rgba(42, 18, 24, 0.45);
+  text-align: center;
+  padding: 0.35rem 0;
+}
+
+/* --- Painel administrativo --- */
+.admin-page {
+  max-width: 44rem;
+}
+
+.admin-login__text {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(42, 18, 24, 0.82);
+}
+
+.admin-err {
+  margin: 0.75rem 0 0;
+  font-size: 0.82rem;
+  color: var(--marsala);
+}
+
+.admin-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.admin-refresh {
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(201, 169, 98, 0.55);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--marsala-suave);
+  cursor: pointer;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.admin-stat {
+  padding: 0.75rem 0.85rem;
+  border-radius: 12px;
+  background: rgba(255, 252, 248, 0.92);
+  border: 1px solid rgba(201, 169, 98, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-stat--wide {
+  grid-column: 1 / -1;
+}
+
+.admin-stat__label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(42, 18, 24, 0.58);
+  line-height: 1.35;
+}
+
+.admin-stat__val {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--marsala-suave);
+  line-height: 1.1;
+}
+
+.admin-stat__sub {
+  font-size: 0.72rem;
+  color: rgba(42, 18, 24, 0.55);
+}
+
+.admin-bar120 {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(201, 169, 98, 0.22);
+  overflow: hidden;
+  margin-top: 0.35rem;
+}
+
+.admin-bar120__fill {
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    rgba(201, 169, 98, 0.95),
+    var(--marsala-suave)
+  );
+  transition: width 0.35s ease;
+}
+
+.admin-bar120__txt {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(42, 18, 24, 0.72);
+  margin-top: 0.35rem;
+}
+
+.admin-section {
+  padding: 1rem 1.05rem 1.15rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(201, 169, 98, 0.32);
+  text-align: left;
+}
+
+.admin-h2 {
+  margin: 0 0 0.85rem;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--marsala-suave);
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.admin-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-lista li {
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  background: rgba(252, 248, 244, 0.95);
+  border: 1px solid rgba(201, 169, 98, 0.25);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: rgba(42, 18, 24, 0.88);
+}
+
+.admin-lista--compact li {
+  font-size: 0.8rem;
+  padding: 0.45rem 0.55rem;
+}
+
+.admin-meta {
+  display: block;
+  font-size: 0.72rem;
+  color: rgba(42, 18, 24, 0.52);
+  margin-top: 0.15rem;
+}
+
+.admin-vazio {
+  margin: 0;
+  font-size: 0.86rem;
+  color: rgba(42, 18, 24, 0.55);
+  font-style: italic;
+}
+
+.admin-pres-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.admin-pres-main {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.admin-pres-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.admin-edit {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(201, 169, 98, 0.55);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--marsala-suave);
+  cursor: pointer;
+}
+
+.admin-edit:hover {
+  background: rgba(252, 248, 244, 1);
+}
+
+.admin-pres-item--editing {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.admin-pres-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.admin-pres-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.admin-pres-actions .rsvp-submit {
+  flex: 1 1 auto;
+  margin-top: 0;
+  min-width: 7rem;
+}
+
+.admin-tag {
+  display: inline-block;
+  margin-left: 0.25rem;
+  padding: 0.12rem 0.4rem;
+  border-radius: 6px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(42, 18, 24, 0.08);
+  color: rgba(42, 18, 24, 0.55);
+  vertical-align: middle;
+}
+
+.admin-tag--ok {
+  background: rgba(212, 237, 218, 0.85);
+  color: #1e5c2e;
+}
+
+.admin-del {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(143, 61, 79, 0.45);
+  background: transparent;
+  color: var(--marsala);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.admin-del:hover {
+  background: rgba(248, 215, 218, 0.35);
 }

@@ -16,20 +16,67 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="pagina-interna">
-      <a class="pagina-interna__voltar" href="index.html">← Voltar ao convite</a>
-      <h1 class="pagina-interna__titulo">Confirmar presença</h1>
-      <p class="pagina-interna__sub">Brunna &amp; Thiago · 13 de junho de 2026</p>
-      <div class="pagina-interna__cartao">
-        <p>
-          Em breve abriremos aqui o formulário para você confirmar se vem
-          celebrar com a gente. Até lá, qualquer dúvida é só falar com os
-          noivos.
-        </p>
-        <p>
-          Data, horário e endereço estão no convite principal.
-        </p>
-      </div>
+    <main
+      class="pagina-interna"
+      data-rsvp-api="/api/rsvp"
+      data-presentes-api="/api/presentes"
+    >
+    <a class="pagina-interna__voltar" href="index.html">← Voltar ao convite</a>
+    <h1 class="pagina-interna__titulo">Confirmar presença</h1>
+    <p class="pagina-interna__sub">Brunna &amp; Thiago · 13 de junho de 2026</p>
+
+    <div class="pagina-interna__cartao pagina-interna__cartao--form">
+      <p class="rsvp-intro">
+        Será uma alegria celebrar este momento ao seu lado. Cada convite é
+        <strong>individual</strong> e pessoal: este formulário confirma a
+        presença de <strong>uma única pessoa</strong> — a sua —, com seu nome e
+        e-mail. Depois, se quiser, você será encaminhado à lista de presentes.
+      </p>
+
+      <div
+        id="rsvpMessage"
+        class="rsvp-message"
+        role="status"
+        hidden
+      ></div>
+
+      <form id="rsvpForm" class="rsvp-form" novalidate>
+        <fieldset class="rsvp-fieldset">
+          <legend class="rsvp-legend">Seus dados</legend>
+          <label class="rsvp-label" for="titularName">Nome completo</label>
+          <input
+            class="rsvp-input"
+            type="text"
+            id="titularName"
+            name="titularName"
+            required
+            maxlength="200"
+            autocomplete="name"
+          />
+
+          <label class="rsvp-label" for="titularEmail">E-mail</label>
+          <input
+            class="rsvp-input"
+            type="email"
+            id="titularEmail"
+            name="titularEmail"
+            required
+            autocomplete="email"
+          />
+        </fieldset>
+
+        <button type="submit" class="rsvp-submit" id="rsvpSubmit">
+          Confirmar presença
+        </button>
+      </form>
+
+      <p class="rsvp-footnote rsvp-footnote--convite">
+        Sua confirmação nos ajuda a preparar tudo com carinho. Se precisar
+        ajustar algo depois, fale diretamente com Brunna ou Thiago.
+      </p>
+    </div>
     </main>
+
+    <script src="rsvp.js"></script>
   </body>
 </html>

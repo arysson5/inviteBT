@@ -39,10 +39,42 @@ const AUDIO_VIOLINO = encodeURI(
 
 function getAudioViolino() {
   if (!audioViolino) {
-    audioViolino = new Audio(AUDIO_VIOLINO);
-    audioViolino.preload = "auto";
+    const el = document.getElementById("violinoAudio");
+    if (el) {
+      audioViolino = el;
+      try {
+        el.playsInline = true;
+        el.setAttribute("playsinline", "");
+        el.setAttribute("webkit-playsinline", "");
+      } catch {
+        /* ignore */
+      }
+    } else {
+      audioViolino = new Audio(AUDIO_VIOLINO);
+      audioViolino.preload = "auto";
+    }
   }
   return audioViolino;
+}
+
+/**
+ * Mobile (sobretudo iOS): o play tem de estar ligado ao toque; touchstart corre antes de pointerdown.
+ * Evita `await` antes de play — quebra a “user activation” em alguns WebKits.
+ */
+function reproduzirViolino() {
+  const a = getAudioViolino();
+  if (!a) return;
+  try {
+    a.muted = false;
+    if (typeof a.volume === "number") a.volume = 1;
+  } catch {
+    /* ignore */
+  }
+  if (!a.paused) return;
+  const p = a.play();
+  if (p !== undefined && typeof p.catch === "function") {
+    p.catch(() => {});
+  }
 }
 
 /** Pausa o violino quando a aba/janela deixa de estar visível (minimizar, trocar de aba, etc.). */
@@ -278,7 +310,9 @@ function iniciarDestaqueTilt(wrap, inner) {
     ease: "sine.inOut",
   });
 
-  inner.classList.add("cena__tilt-inner--destaque");
+  if (!inner.classList.contains("cena__tilt-inner--envelope")) {
+    inner.classList.add("cena__tilt-inner--destaque");
+  }
 }
 
 function iniciarDestaqueCartaESelo() {
@@ -421,7 +455,7 @@ function onCliqueAbrirConvite() {
     gsap.set(envInner, { rotationX: 0, rotationY: 0 });
   }
 
-  getAudioViolino().play().catch(() => {});
+  reproduzirViolino();
 
   const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
@@ -510,7 +544,18 @@ function onCliqueAbrirConvite() {
 function configurarCliqueEnvelope() {
   const btn = cartaFechadaBtn();
   if (!btn) return;
-  btn.addEventListener("click", onCliqueAbrirConvite, { once: true });
+  const noToqueParaAudio = () => {
+    reproduzirViolino();
+  };
+  btn.addEventListener("touchstart", noToqueParaAudio, { passive: true });
+  const abrir = () => {
+    btn.removeEventListener("pointerdown", abrir);
+    btn.removeEventListener("click", abrir);
+    btn.removeEventListener("touchstart", noToqueParaAudio);
+    onCliqueAbrirConvite();
+  };
+  btn.addEventListener("pointerdown", abrir);
+  btn.addEventListener("click", abrir);
 }
 
 async function runSequencia() {

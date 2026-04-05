@@ -1,5 +1,16 @@
 {
   "name": "casamento-convite",
   "private": true,
-  "description": "Convite estático (HTML/CSS/JS) — sem build; compatível com deploy na Vercel."
+  "description": "Convite estático (HTML/CSS/JS) — sem build; compatível com deploy na Vercel.",
+  "scripts": {
+    "dev": "node scripts/rsvp-dev-server.js",
+    "dev:rsvp-api": "node scripts/rsvp-dev-server.js",
+    "vercel:dev": "vercel dev"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  }
 }

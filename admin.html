@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestão — Casamento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="pagina-interna admin-page" data-admin-api="/api/admin">
+      <a class="pagina-interna__voltar" href="index.html">← Voltar ao convite</a>
+      <h1 class="pagina-interna__titulo">Painel administrativo</h1>
+      <p class="pagina-interna__sub">Brunna &amp; Thiago</p>
+
+      <section id="adminLogin" class="pagina-interna__cartao admin-login">
+        <p class="admin-login__text">Informe a senha para continuar.</p>
+        <label class="rsvp-label" for="adminPwdInput">Senha</label>
+        <input
+          class="rsvp-input"
+          type="password"
+          id="adminPwdInput"
+          autocomplete="current-password"
+        />
+        <button type="button" class="rsvp-submit" id="adminLoginBtn">
+          Entrar
+        </button>
+        <p id="adminLoginErr" class="admin-err" hidden></p>
+      </section>
+
+      <div id="adminPanel" class="admin-panel" hidden>
+        <div class="admin-toolbar">
+          <button type="button" class="presentes-userbar__out" id="adminLogout">
+            Sair
+          </button>
+          <button type="button" class="admin-refresh" id="adminRefresh">
+            Atualizar dados
+          </button>
+        </div>
+
+        <p id="adminMsg" class="rsvp-message" role="status" hidden></p>
+
+        <section class="admin-stats">
+          <div class="admin-stat">
+            <span class="admin-stat__label">Pessoas (soma das Qtd.)</span>
+            <strong class="admin-stat__val" id="statPessoas">0</strong>
+            <span class="admin-stat__sub">meta <span id="statCap">120</span></span>
+          </div>
+          <div class="admin-stat admin-stat--wide">
+            <span class="admin-stat__label">Lotacao do salao (max. 120)</span>
+            <div class="admin-bar120" role="progressbar" aria-valuemin="0" aria-valuemax="120">
+              <div class="admin-bar120__fill" id="bar120Fill"></div>
+            </div>
+            <span class="admin-bar120__txt" id="bar120Txt">0 / 120</span>
+          </div>
+          <div class="admin-stat">
+            <span class="admin-stat__label">Presentes na lista</span>
+            <strong class="admin-stat__val" id="statNP">0</strong>
+          </div>
+          <div class="admin-stat">
+            <span class="admin-stat__label">Ja escolhidos</span>
+            <strong class="admin-stat__val" id="statEsc">0</strong>
+          </div>
+          <div class="admin-stat">
+            <span class="admin-stat__label">% da lista reservada</span>
+            <strong class="admin-stat__val" id="statPct">0%</strong>
+          </div>
+        </section>
+
+        <section class="admin-section">
+          <h2 class="admin-h2">Adicionar presente</h2>
+          <form id="formAddPresente" class="admin-form">
+            <label class="rsvp-label" for="apNome">Nome do item *</label>
+            <input class="rsvp-input" id="apNome" required maxlength="200" />
+            <label class="rsvp-label" for="apUrl">URL (loja)</label>
+            <input class="rsvp-input" id="apUrl" type="url" placeholder="https://" />
+            <label class="rsvp-label" for="apPreco">Preço (texto livre)</label>
+            <input class="rsvp-input" id="apPreco" placeholder="R$ …" />
+            <label class="rsvp-label" for="apImg">URL da foto</label>
+            <input class="rsvp-input" id="apImg" type="url" placeholder="https://" />
+            <button type="submit" class="rsvp-submit" id="apBtn">Adicionar</button>
+          </form>
+        </section>
+
+        <section class="admin-section">
+          <h2 class="admin-h2">Escolhas (quem pegou o que)</h2>
+          <ul id="listaEscolhas" class="admin-lista"></ul>
+          <p id="listaEscolhasVazia" class="admin-vazio" hidden>
+            Ninguém escolheu presente ainda.
+          </p>
+        </section>
+
+        <section class="admin-section">
+          <h2 class="admin-h2">Itens cadastrados</h2>
+          <ul id="listaPresentes" class="admin-lista admin-lista--presentes"></ul>
+        </section>
+
+        <section class="admin-section">
+          <h2 class="admin-h2">Confirmados (planilha)</h2>
+          <ul id="listaConvidados" class="admin-lista admin-lista--compact"></ul>
+        </section>
+      </div>
+    </main>
+    <script src="admin.js"></script>
+  </body>
+</html>

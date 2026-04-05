@@ -16,20 +16,90 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="pagina-interna">
+    <main
+      class="pagina-interna pagina-interna--presentes"
+      data-presentes-api="/api/presentes"
+    >
       <a class="pagina-interna__voltar" href="index.html">← Voltar ao convite</a>
       <h1 class="pagina-interna__titulo">Lista de presentes</h1>
       <p class="pagina-interna__sub">Brunna &amp; Thiago</p>
-      <div class="pagina-interna__cartao">
-        <p>
-          Aqui você encontra sugestões para celebrar com a gente. O carinho de
-          vir ao grande dia já é o maior presente.
+
+      <section
+        id="presentesGate"
+        class="pagina-interna__cartao presentes-gate"
+        hidden
+      >
+        <p class="presentes-gate__lead">
+          Para ver e escolher presentes, confirme antes sua presença no casamento.
         </p>
-        <p>
-          Em breve você poderá ver a lista completa ou o link da loja — este
-          espaço está reservado para quando tudo estiver definido.
+        <a class="rsvp-submit presentes-gate__cta" href="rsvp.html"
+          >Confirmar presença</a
+        >
+
+        <div
+          class="presentes-gate__recover"
+          aria-describedby="presentesRecoverHelp"
+        >
+          <p
+            id="presentesRecoverHelp"
+            class="presentes-gate__recover-title presentes-gate__recover-hint"
+          >
+            Preencha o <strong>mesmo e-mail</strong> que você colocou ao
+            <strong>confirmar presença</strong> no casamento. Com ele você volta
+            a ver a lista e, se já tiver escolhido, o seu presente.
+          </p>
+          <form id="presentesRecoverForm" class="presentes-recover-form" novalidate>
+            <label class="rsvp-label" for="presentesRecoverEmail">E-mail</label>
+            <input
+              type="email"
+              id="presentesRecoverEmail"
+              class="rsvp-input"
+              required
+              autocomplete="email"
+              inputmode="email"
+              placeholder="seu@email.com"
+            />
+            <button type="submit" class="rsvp-submit" id="presentesRecoverSubmit">
+              Ver minha escolha
+            </button>
+          </form>
+          <p id="presentesRecoverErr" class="presentes-recover-err" hidden></p>
+        </div>
+      </section>
+
+      <div id="presentesApp" class="presentes-app" hidden>
+        <div class="pagina-interna__cartao presentes-userbar">
+          <p class="presentes-userbar__hello" id="presentesWelcome"></p>
+          <button type="button" class="presentes-userbar__out" id="presentesLogout">
+            Sair deste convidado
+          </button>
+        </div>
+
+        <div
+          id="presentesMessage"
+          class="rsvp-message"
+          role="status"
+          hidden
+        ></div>
+
+        <div class="presentes-stats" id="presentesStats" hidden>
+          <span><strong id="presentesStatTotal">0</strong> itens</span>
+          <span
+            ><strong id="presentesStatLivres">0</strong> disponíveis</span
+          >
+        </div>
+
+        <p id="presentesMeuHint" class="presentes-meu-hint" hidden></p>
+
+        <p class="presentes-dica">
+          Os links são sugestões: você pode comprar o mesmo item em outra loja,
+          mantendo cor/modelo quando fizer sentido.
         </p>
+
+        <div id="presentesGrid" class="presentes-grid"></div>
+        <p id="presentesLoadErr" class="presentes-load-err" hidden></p>
       </div>
     </main>
+    <script src="presentes.js"></script>
   </body>
 </html>
