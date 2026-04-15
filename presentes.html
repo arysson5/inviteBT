@@ -70,20 +70,25 @@
       <div id="presentesApp" class="presentes-app" hidden>
         <div class="pagina-interna__cartao presentes-userbar">
           <p class="presentes-userbar__hello" id="presentesWelcome"></p>
-          <p class="presentes-userbar__pix-msg">
-            Quer deixar essa nova fase ainda mais especial? Se desejar contribuir
-            um pouquinho mais para a nossa uniao, segue a chave Pix:
-          </p>
-          <div class="presentes-userbar__pix">
-            <span><strong>Chave Pix:</strong> Albrunna05@gmail.com</span>
-            <button
-              type="button"
-              class="rsvp-submit presentes-userbar__copy"
-              id="presentesCopyPix"
-              onclick="navigator.clipboard.writeText('Albrunna05@gmail.com').then(() => { this.textContent = 'Copiado!'; setTimeout(() => { this.textContent = 'Copiar chave Pix'; }, 1800); });"
-            >
-              Copiar chave Pix
-            </button>
+          <div class="presentes-userbar__pix-wrap">
+            <p class="presentes-userbar__pix-msg">
+              Além da nossa lista de presentes, deixamos também nossa chave Pix
+              para quem desejar nos abençoar de outra forma 🤍
+            </p>
+            <div class="presentes-userbar__pix">
+              <p class="presentes-userbar__pix-key">
+                <span class="presentes-userbar__pix-label">Chave Pix</span>
+                <strong>Albrunna05@gmail.com</strong>
+              </p>
+              <button
+                type="button"
+                class="rsvp-submit presentes-userbar__copy"
+                id="presentesCopyPix"
+                onclick="navigator.clipboard.writeText('Albrunna05@gmail.com').then(() => { this.textContent = 'Copiado!'; setTimeout(() => { this.textContent = 'Copiar chave Pix'; }, 1800); });"
+              >
+                Copiar chave Pix
+              </button>
+            </div>
           </div>
           <button type="button" class="presentes-userbar__out" id="presentesLogout">
             Sair deste convidado

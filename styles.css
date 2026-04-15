@@ -2428,8 +2428,7 @@ a.presentes-gate__cta.rsvp-submit {
 .presentes-userbar {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
   gap: 0.75rem;
   margin-bottom: 1rem;
   text-align: left;
@@ -2440,10 +2439,97 @@ a.presentes-gate__cta.rsvp-submit {
   font-size: 0.88rem;
   line-height: 1.5;
   color: rgba(42, 18, 24, 0.85);
-  flex: 1 1 12rem;
+  flex: 1 1 100%;
+}
+
+.presentes-userbar__pix-wrap {
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.95rem;
+  border-radius: 14px;
+  background: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(252, 247, 241, 0.95) 62%,
+    rgba(249, 241, 233, 0.92) 100%
+  );
+  border: 1px solid rgba(201, 169, 98, 0.38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 10px 24px rgba(143, 61, 79, 0.08);
+}
+
+.presentes-userbar__pix-msg {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.62;
+  font-weight: 500;
+  color: rgba(42, 18, 24, 0.83);
+  text-wrap: balance;
+}
+
+.presentes-userbar__pix {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  padding: 0.8rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px dashed rgba(201, 169, 98, 0.62);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.presentes-userbar__pix-key {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.presentes-userbar__pix-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(42, 18, 24, 0.56);
+}
+
+.presentes-userbar__pix-key strong {
+  font-size: 0.96rem;
+  letter-spacing: 0.015em;
+  color: var(--marsala-suave);
+  word-break: break-all;
+}
+
+.presentes-userbar__copy {
+  margin-top: 0;
+  width: auto;
+  min-width: 10.25rem;
+  padding: 0.58rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.07em;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: 0 5px 16px rgba(143, 61, 79, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.presentes-userbar__copy:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(143, 61, 79, 0.27);
+  filter: saturate(1.05);
+}
+
+.presentes-userbar__copy:focus-visible {
+  outline: 2px solid var(--dourado);
+  outline-offset: 2px;
 }
 
 .presentes-userbar__out {
+  margin-left: auto;
   font-family: "Montserrat", system-ui, sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
@@ -2455,6 +2541,18 @@ a.presentes-gate__cta.rsvp-submit {
   background: rgba(255, 255, 255, 0.85);
   color: var(--marsala-suave);
   cursor: pointer;
+}
+
+@media (max-width: 460px) {
+  .presentes-userbar__pix {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .presentes-userbar__copy {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 .presentes-userbar__out:hover {
