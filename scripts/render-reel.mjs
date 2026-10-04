@@ -10,7 +10,7 @@ const HTML = "file:///workspace/pitch/reel.html?freeze=1";
 const OUT_DIR = process.argv[2] || "/tmp/reel-frames";
 const MODE = process.argv[3] || "full";
 
-const STILLS = [0.4, 1.7, 3.2, 4.5, 5.2, 6.3, 8.9, 11.6, 14.8, 17.4, 19.5, 22.1, 26.2, 30.2, 34.6, 37.3, 41.9];
+const STILLS = [0.5, 2.3, 5.6, 8.1, 15.4, 20.3, 28.0, 33.0, 41.2];
 
 function startChrome() {
   rmSync("/tmp/chrome-reel-profile", { recursive: true, force: true });
@@ -98,7 +98,7 @@ async function main() {
     const times =
       MODE === "stills"
         ? STILLS
-        : Array.from({ length: Math.round(43.8 * FPS) }, (_, i) => i / FPS);
+        : Array.from({ length: Math.round(43.4 * FPS) }, (_, i) => i / FPS);
 
     for (let i = 0; i < times.length; i++) {
       const t = times[i];

@@ -7,7 +7,7 @@ import struct
 import wave
 
 SR = 44100
-DUR = 43.8
+DUR = 43.4
 N = int(SR * DUR)
 buf = [0.0] * N
 rnd = random.Random(11)
@@ -49,7 +49,7 @@ for b in range(n_beats):
     else:
         add_tone(t0, chord[2] * 2, 0.35, 0.03, 0.16)
 
-    if t0 >= 31.2 and t0 < 38.4 and b % 2 == 0:
+    if t0 >= 31.7 and t0 < 37.0 and b % 2 == 0:
         add_tone(t0, chord[1] * 2, 0.45, 0.045, 0.18)
 
     if b % 4 in (0, 2):
@@ -78,7 +78,7 @@ for b in range(n_beats):
         env = math.exp(-t * 90)
         add(start + n, (rnd.random() * 2 - 1) * env * 0.035)
 
-CUTS = [1.2, 2.4, 4.2, 7.2, 10.2, 13.2, 16.2, 18.6, 20.4, 23.4, 27.0, 31.2, 38.4, 40.74]
+CUTS = [1.65, 3.15, 4.55, 6.7, 9.4, 11.9, 14.3, 16.7, 18.9, 21.8, 24.2, 26.9, 29.2, 31.7, 34.4, 37.0, 39.16]
 for cut in CUTS:
     samples = int(0.16 * SR)
     start = int(max(0, cut - 0.02) * SR)
@@ -88,7 +88,7 @@ for cut in CUTS:
         freq = 420 + t * 1600
         add(start + n, math.sin(2 * math.pi * freq * t) * env * 0.035)
 
-swell_start = int(40.74 * SR)
+swell_start = int(39.16 * SR)
 for n in range(int(3.6 * SR)):
     t = n / SR
     env = min(1.0, t / 0.35) * (1 - min(1.0, max(0.0, t - 2.9) / 0.7))
