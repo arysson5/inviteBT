@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Reel — Convite digital</title>
+    <style>
+      :root {
+        --ink: #241016;
+        --cream: #f6f1e8;
+        --cream-2: #fffaf3;
+        --gold: #e2c27a;
+        --gold-deep: #b8924a;
+        --marsala: #6e2c3d;
+        --marsala-deep: #3a1520;
+        --night: #14090d;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      html, body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--night);
+        color: var(--cream);
+        font-family: Inter, "Noto Sans", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      #app {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+
+      #bg {
+        position: absolute;
+        inset: 0;
+      }
+
+      #dust, #view, #flash, #vignette, #bar {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      #view { pointer-events: none; }
+
+      #flash {
+        background: #fff8ec;
+        opacity: 0;
+        mix-blend-mode: screen;
+      }
+
+      #vignette {
+        background:
+          radial-gradient(ellipse at center, transparent 42%, rgba(0, 0, 0, 0.38) 100%),
+          linear-gradient(180deg, rgba(0, 0, 0, 0.28), transparent 18%, transparent 72%, rgba(0, 0, 0, 0.45));
+      }
+
+      .grain {
+        position: absolute;
+        inset: -40px;
+        opacity: 0.18;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.55'/></svg>");
+        mix-blend-mode: overlay;
+      }
+
+      #bar {
+        inset: auto 64px auto 64px;
+        top: 78px;
+        height: 8px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.16);
+        overflow: hidden;
+      }
+
+      #bar > span {
+        display: block;
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+      }
+
+      .head {
+        position: absolute;
+        top: 118px;
+        left: 72px;
+        right: 72px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 26px;
+        color: var(--gold);
+      }
+
+      .head .idx {
+        letter-spacing: 0;
+        font-variant-numeric: tabular-nums;
+        opacity: 0.85;
+      }
+
+      .light-copy .head { color: var(--marsala); }
+
+      .foot {
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        bottom: 360px;
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 52px;
+        line-height: 1.12;
+        font-weight: 600;
+      }
+
+      .light-copy .foot { color: var(--ink); }
+
+      .stage {
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        top: 210px;
+        bottom: 560px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .serif { font-family: "Noto Serif Display", Georgia, serif; }
+
+      .hook-kicker {
+        font-size: 28px;
+        letter-spacing: 0.42em;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-weight: 600;
+        margin-bottom: 28px;
+      }
+
+      .hook-title {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-weight: 600;
+        font-size: 132px;
+        line-height: 0.92;
+        letter-spacing: -0.03em;
+      }
+
+      .hook-title em {
+        font-style: italic;
+        color: var(--gold);
+      }
+
+      .giant {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 280px;
+        line-height: 0.8;
+        letter-spacing: -0.05em;
+        font-weight: 600;
+      }
+
+      .sub {
+        margin-top: 18px;
+        font-size: 40px;
+        line-height: 1.25;
+        max-width: 860px;
+        color: rgba(246, 241, 232, 0.82);
+      }
+
+      .pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 36px;
+      }
+
+      .pill {
+        border: 1.5px solid rgba(226, 194, 122, 0.7);
+        color: var(--gold);
+        border-radius: 999px;
+        padding: 14px 26px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      .pill.solid {
+        background: var(--marsala);
+        color: var(--cream);
+        border-color: transparent;
+      }
+
+      .env-wrap {
+        height: 760px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1600px;
+      }
+
+      .env {
+        position: relative;
+        width: 700px;
+        height: 560px;
+      }
+
+      .letter {
+        position: absolute;
+        left: 46px;
+        right: 46px;
+        height: 280px;
+        top: 70px;
+        background: linear-gradient(180deg, #fffdf9, #f3e7d6);
+        border-radius: 16px;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--marsala);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+      }
+
+      .letter small {
+        letter-spacing: 0.38em;
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .letter strong {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 78px;
+        font-weight: 600;
+        line-height: 0.95;
+        text-align: center;
+      }
+
+      .pocket {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 168px;
+        height: 320px;
+        background: linear-gradient(180deg, #f7f1e6, #e6d8c4);
+        border-radius: 28px;
+        z-index: 2;
+        box-shadow: 0 36px 70px rgba(0, 0, 0, 0.35);
+      }
+
+      .pocket:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 170px;
+        background: linear-gradient(180deg, transparent, rgba(110, 44, 61, 0.07));
+        clip-path: polygon(0 55%, 50% 0, 100% 55%, 100% 100%, 0 100%);
+        border-radius: 0 0 28px 28px;
+      }
+
+      .flap {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 168px;
+        height: 168px;
+        background: linear-gradient(180deg, #efe4d4, #d9c6ae);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        transform-origin: top center;
+        z-index: 3;
+      }
+
+      .seal {
+        position: absolute;
+        left: 50%;
+        top: 286px;
+        width: 112px;
+        height: 112px;
+        margin-left: -56px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #a84358, #6e2c3d 62%, #4a1b28);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 36px;
+        z-index: 5;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+      }
+
+      .burst i {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--gold);
+        left: 50%;
+        top: 46%;
+        z-index: 6;
+        box-shadow: 0 0 12px rgba(226, 194, 122, 0.8);
+      }
+
+      .quote {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-style: italic;
+        font-size: 64px;
+        line-height: 1.12;
+        color: var(--ink);
+      }
+
+      .names {
+        margin-top: 28px;
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 92px;
+        line-height: 0.92;
+        color: var(--marsala);
+        font-weight: 600;
+      }
+
+      .gold-rule {
+        width: 120px;
+        height: 3px;
+        background: var(--gold-deep);
+        margin: 28px 0;
+      }
+
+      .meta {
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--marsala);
+      }
+
+      .strip {
+        display: flex;
+        gap: 18px;
+        margin-top: 42px;
+      }
+
+      .tile {
+        width: 210px;
+        height: 250px;
+        border-radius: 18px;
+        flex: 1 1 0;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 18px 40px rgba(42, 18, 24, 0.18);
+      }
+
+      .tile span {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 16px;
+        color: white;
+        font-size: 20px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .album {
+        height: 760px;
+        position: relative;
+      }
+
+      .polaroid {
+        position: absolute;
+        width: 520px;
+        height: 640px;
+        left: 180px;
+        top: 40px;
+        background: #fffaf3;
+        border-radius: 8px 8px 18px 18px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+        padding: 22px 22px 70px;
+      }
+
+      .polaroid .ph {
+        height: 100%;
+        border-radius: 4px;
+      }
+
+      .polaroid b {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 22px;
+        text-align: center;
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 32px;
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .date-big {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 150px;
+        line-height: 0.84;
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .date-sub {
+        font-size: 40px;
+        margin: 10px 0 36px;
+        color: var(--marsala);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .count {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+
+      .cell {
+        background: white;
+        border-radius: 22px;
+        text-align: center;
+        padding: 22px 8px 16px;
+        box-shadow: 0 16px 30px rgba(42, 18, 24, 0.08);
+      }
+
+      .cell strong {
+        display: block;
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 72px;
+        color: var(--marsala);
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+      }
+
+      .cell span {
+        display: block;
+        margin-top: 6px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-size: 18px;
+        color: #8a7080;
+        font-weight: 600;
+      }
+
+      .map {
+        height: 620px;
+        border-radius: 36px;
+        background:
+          linear-gradient(180deg, rgba(20, 9, 13, 0.05), rgba(20, 9, 13, 0.28)),
+          repeating-linear-gradient(0deg, transparent, transparent 46px, rgba(226, 194, 122, 0.18) 47px),
+          repeating-linear-gradient(90deg, transparent, transparent 46px, rgba(226, 194, 122, 0.18) 47px),
+          #2a141b;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.28);
+      }
+
+      .pin {
+        position: absolute;
+        left: 50%;
+        top: 42%;
+        width: 74px;
+        margin-left: -37px;
+      }
+
+      .pin .drop {
+        width: 74px;
+        height: 74px;
+        border-radius: 50% 50% 50% 0;
+        background: var(--gold);
+        transform: rotate(-45deg);
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+      }
+
+      .pin .dot {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--marsala);
+        left: 24px;
+        top: 22px;
+      }
+
+      .place {
+        margin-top: 28px;
+      }
+
+      .place h2 {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 68px;
+        line-height: 0.95;
+        font-weight: 600;
+      }
+
+      .place p {
+        margin-top: 10px;
+        font-size: 30px;
+        color: rgba(246, 241, 232, 0.78);
+      }
+
+      .cards3 {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .dress {
+        background: white;
+        color: var(--ink);
+        border-radius: 28px;
+        padding: 28px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 16px 34px rgba(42, 18, 24, 0.08);
+      }
+
+      .dress b {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 54px;
+        font-weight: 600;
+        color: var(--marsala);
+      }
+
+      .dress span {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: 600;
+        color: #8d7380;
+      }
+
+      .time-list { position: relative; padding-left: 40px; }
+
+      .time-list:before {
+        content: "";
+        position: absolute;
+        left: 8px;
+        top: 10px;
+        bottom: 10px;
+        width: 4px;
+        background: rgba(226, 194, 122, 0.25);
+        border-radius: 4px;
+        transform-origin: top center;
+      }
+
+      .slot {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 18px;
+        align-items: center;
+        padding: 18px 0;
+      }
+
+      .slot .h {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 44px;
+        color: var(--gold);
+      }
+
+      .slot .w {
+        font-size: 40px;
+        font-weight: 600;
+      }
+
+      .slot small {
+        display: block;
+        font-weight: 600;
+        color: #f6f1e8;
+        font-size: 28px;
+        margin-top: 4px;
+      }
+
+      .form {
+        background: white;
+        color: var(--ink);
+        border-radius: 36px;
+        padding: 40px 36px 32px;
+        box-shadow: 0 30px 70px rgba(42, 18, 24, 0.12);
+      }
+
+      .form h3 {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 58px;
+        color: var(--marsala);
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .form .hint {
+        color: #8c7380;
+        font-size: 24px;
+        margin-bottom: 26px;
+      }
+
+      label.lbl {
+        display: block;
+        font-size: 20px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #8c7380;
+        font-weight: 600;
+        margin: 16px 0 8px;
+      }
+
+      .field {
+        height: 78px;
+        border-radius: 16px;
+        border: 2px solid #eadfd4;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        font-size: 34px;
+        background: #fffdfb;
+      }
+
+      .caret {
+        display: inline-block;
+        width: 2px;
+        height: 36px;
+        background: var(--marsala);
+        margin-left: 3px;
+        vertical-align: middle;
+      }
+
+      .btn {
+        margin-top: 26px;
+        height: 88px;
+        border-radius: 999px;
+        background: var(--marsala);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+      }
+
+      .success {
+        text-align: center;
+        padding: 24px 10px 10px;
+      }
+
+      .success h3 {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 68px;
+        color: var(--marsala);
+        line-height: 1;
+        margin-top: 12px;
+      }
+
+      .success p { margin-top: 12px; font-size: 30px; color: #6d5862; }
+
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .gift {
+        background: white;
+        color: var(--ink);
+        border-radius: 26px;
+        overflow: hidden;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+        position: relative;
+      }
+
+      .gift .sw { height: 132px; }
+      .gift .bd { padding: 16px 16px 18px; }
+      .gift b { display: block; font-size: 28px; line-height: 1.15; }
+      .gift em { font-style: normal; color: var(--marsala); font-weight: 700; font-size: 24px; }
+
+      .tag {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: var(--marsala);
+        color: white;
+        border-radius: 999px;
+        font-size: 16px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 7px 10px;
+        font-weight: 700;
+      }
+
+      .tag.free { background: #2f6b4f; }
+
+      .pix {
+        margin-top: 16px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(226, 194, 122, 0.35);
+        border-radius: 22px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .pix b { display: block; font-size: 28px; }
+      .pix span { font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+
+      .pix button {
+        border: 0;
+        background: var(--gold);
+        color: var(--ink);
+        font-weight: 700;
+        border-radius: 999px;
+        padding: 16px 18px;
+        font-size: 22px;
+        font-family: inherit;
+      }
+
+      .panel {
+        background: rgba(255, 250, 243, 0.06);
+        border: 1px solid rgba(226, 194, 122, 0.28);
+        border-radius: 32px;
+        padding: 28px;
+      }
+
+      .stat-hero {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+
+      .stat-hero .n {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 168px;
+        line-height: 0.8;
+        color: var(--gold);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .stat-hero .of {
+        font-size: 32px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(246, 241, 232, 0.7);
+        margin-bottom: 16px;
+        text-align: right;
+      }
+
+      .bar120 {
+        margin: 22px 0 18px;
+        height: 22px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      .bar120 span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--marsala), var(--gold));
+        border-radius: 99px;
+      }
+
+      .mini-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .mini {
+        background: rgba(0, 0, 0, 0.22);
+        border-radius: 18px;
+        padding: 14px 12px;
+      }
+
+      .mini b {
+        display: block;
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 48px;
+        color: white;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .mini span {
+        font-size: 16px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(246, 241, 232, 0.62);
+      }
+
+      .rows { display: flex; flex-direction: column; gap: 12px; }
+
+      .row {
+        background: rgba(255, 250, 243, 0.08);
+        border-radius: 18px;
+        padding: 16px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .row b { font-size: 30px; display: block; }
+      .row small { color: rgba(246, 241, 232, 0.65); font-size: 22px; }
+      .row em {
+        font-style: normal;
+        color: var(--gold);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .toast {
+        margin-bottom: 16px;
+        background: var(--cream);
+        color: var(--ink);
+        border-radius: 18px;
+        padding: 16px 18px;
+        font-size: 28px;
+        font-weight: 600;
+      }
+
+      .toast span { color: var(--marsala); }
+
+      .lock {
+        text-align: center;
+      }
+
+      .lock .dots { letter-spacing: 0.5em; font-size: 54px; color: var(--gold); }
+
+      .end {
+        text-align: center;
+      }
+
+      .end .word {
+        font-family: "Noto Serif Display", Georgia, serif;
+        font-size: 120px;
+        line-height: 0.9;
+        font-weight: 600;
+      }
+
+      .end .handle {
+        margin-top: 28px;
+        font-size: 64px;
+        font-weight: 700;
+        color: var(--marsala);
+        letter-spacing: -0.03em;
+      }
+
+      .end .fine {
+        margin-top: 22px;
+        font-size: 24px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #8d7380;
+        font-weight: 600;
+      }
+
+      .light-copy { color: var(--ink); }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="bg"></div>
+      <div class="grain"></div>
+      <div id="dust"></div>
+      <div id="view"></div>
+      <div id="flash"></div>
+      <div id="vignette"></div>
+      <div id="bar"><span id="barFill"></span></div>
+    </div>
+    <script>
+      (function () {
+        var DURATION = 43.8;
+        window.__DURATION = DURATION;
+
+        var CUTS = [1.2, 2.4, 4.2, 7.2, 10.2, 13.2, 16.2, 18.6, 20.4, 23.4, 27, 31.2, 38.4, 40.2];
+
+        function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+        function inv(t, a, b) { return clamp((t - a) / (b - a), 0, 1); }
+        function ease(u) { return 1 - Math.pow(1 - clamp(u, 0, 1), 3); }
+        function back(u) {
+          u = clamp(u, 0, 1);
+          var c = 1.35;
+          return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2);
+        }
+        function pop(t, a, b) { return back(inv(t, a, b)); }
+
+        function bg(light) {
+          if (light) {
+            return "radial-gradient(900px 700px at 80% 10%, rgba(226,194,122,.35), transparent 60%), linear-gradient(180deg, #fbf6ef, #f3e6d8)";
+          }
+          return "radial-gradient(800px 600px at 20% 0%, rgba(110,44,61,.55), transparent 55%), radial-gradient(700px 500px at 100% 80%, rgba(226,194,122,.16), transparent 50%), linear-gradient(180deg, #1a0b10, #12080c 70%)";
+        }
+
+        function dust(t) {
+          var h = "";
+          for (var i = 0; i < 18; i++) {
+            var x = (Math.sin(i * 2.1 + t * 0.45) * 0.5 + 0.5) * 100;
+            var y = (i * 53 + t * 22) % 100;
+            var o = 0.12 + 0.22 * (0.5 + 0.5 * Math.sin(t * 1.7 + i));
+            var s = 6 + (i % 4) * 3;
+            h += '<i style="position:absolute;left:' + x.toFixed(2) + '%;top:' + y.toFixed(2) + '%;width:' + s + 'px;height:' + s + 'px;border-radius:50%;background:#e2c27a;opacity:' + o.toFixed(3) + '"></i>';
+          }
+          return h;
+        }
+
+        function head(idx, label) {
+          return '<div class="head"><span class="idx">' + idx + '</span><span>' + label + '</span></div>';
+        }
+        function foot(text) {
+          return '<div class="foot">' + text + '</div>';
+        }
+        function stage(inner, extra) {
+          return '<div class="stage" style="' + (extra || "") + '">' + inner + '</div>';
+        }
+
+        function hookPdf(t) {
+          var s = 1.06 - 0.06 * ease(inv(t, 0, 0.45));
+          return stage(
+            '<div class="hook-kicker">o link chegou</div>' +
+            '<div class="hook-title" style="transform:scale(' + s.toFixed(3) + ');transform-origin:left center">Ainda<br>manda <em>PDF?</em></div>' +
+            '<p class="sub">Três segundos. É tudo o que o dedo dá.</p>'
+          ) + foot("Fecha. Ou entra.");
+        }
+
+        function hook3s(t) {
+          var local = t - 1.2;
+          var s = pop(local, 0, 0.45);
+          return stage(
+            '<div class="hook-kicker">antes do feed</div>' +
+            '<div class="giant" style="transform:scale(' + s.toFixed(3) + ');transform-origin:left center">3s</div>' +
+            '<p class="sub">Se o convite não prende agora, ele volta pro feed.</p>'
+          ) + foot("E a festa fica numa planilha.");
+        }
+
+        function hookEntra(t) {
+          var local = t - 2.4;
+          var pills = ["abrir", "confirmar", "presentear", "gerir"];
+          var html = pills.map(function (p, i) {
+            var sc = pop(local, 0.25 + i * 0.12, 0.55 + i * 0.12);
+            return '<span class="pill" style="transform:scale(' + sc.toFixed(3) + ')">' + p + '</span>';
+          }).join("");
+          return stage(
+            '<div class="hook-kicker">um link só</div>' +
+            '<div class="hook-title">A menos<br>que ele <em>entre.</em></div>' +
+            '<div class="pills">' + html + '</div>'
+          ) + foot("Espera o painel.");
+        }
+
+        function abertura(t) {
+          var local = t - 4.2;
+          var enter = pop(local, 0, 0.35);
+          var open = ease(inv(local, 0.35, 1.2));
+          var flapScale = 1 - open;
+          var y = 130 - 270 * ease(inv(local, 0.65, 1.7));
+          var seal = 1 - ease(inv(local, 0.3, 0.95));
+          var burst = inv(local, 1.7, 2.55);
+          var dots = "";
+          for (var i = 0; i < 14; i++) {
+            var a = (i / 14) * Math.PI * 2;
+            var r = 20 + burst * 250;
+            var o = burst <= 0 ? 0 : (1 - burst) * 0.9;
+            dots += '<i style="transform:translate(' + (Math.cos(a) * r).toFixed(1) + 'px,' + (Math.sin(a) * r).toFixed(1) + 'px);opacity:' + o.toFixed(3) + '"></i>';
+          }
+          return head("01", "Abertura") + stage(
+            '<div class="env-wrap"><div class="env burst" style="transform:scale(' + enter.toFixed(3) + ')">' +
+              '<div class="letter" style="transform:translateY(' + y.toFixed(1) + 'px)"><small>convite</small><strong>Helena<br>&amp; Lucas</strong></div>' +
+              '<div class="pocket"></div>' +
+              '<div class="flap" style="transform:scaleY(' + flapScale.toFixed(3) + ');opacity:' + (0.35 + 0.65 * flapScale).toFixed(3) + '"></div>' +
+              '<div class="seal" style="opacity:' + seal.toFixed(3) + '">H&amp;L</div>' +
+              dots +
+            '</div></div>'
+          ) + foot("Selo, carta e partículas.");
+        }
+
+        function hero(t) {
+          var local = t - 7.2;
+          var tiles = [
+            ["linear-gradient(160deg,#6e2c3d,#3a1520)", "o pedido"],
+            ["linear-gradient(160deg,#e2c27a,#8d6a32)", "a viagem"],
+            ["linear-gradient(160deg,#a85a48,#5c2c28)", "a casa"],
+            ["linear-gradient(160deg,#4a2c38,#1a0c12)", "o sim"]
+          ];
+          var strip = tiles.map(function (tile, i) {
+            var drift = Math.sin(local * 1.4 + i) * 6;
+            return '<div class="tile" style="background:' + tile[0] + ';transform:translateY(' + drift.toFixed(1) + 'px)"><span>' + tile[1] + '</span></div>';
+          }).join("");
+          var o = ease(inv(local, 0, 0.35));
+          return head("02", "Tela cheia") + stage(
+            '<div style="opacity:' + o.toFixed(3) + '">' +
+              '<p class="quote">“O dia em que a história para de ser contada e começa.”</p>' +
+              '<div class="gold-rule"></div>' +
+              '<div class="names">Helena<br>&amp; Lucas</div>' +
+              '<p class="meta" style="margin-top:18px">14 de novembro de 2026 · 16h</p>' +
+              '<div class="strip">' + strip + '</div>' +
+            '</div>'
+          ) + foot("Frase, nome e fotos em movimento.");
+        }
+
+        function album(t) {
+          var local = t - 10.2;
+          var flip = ease(inv(local, 0.35, 1.35));
+          var rot = -8 + flip * 16;
+          var lift = -flip * 30;
+          var count = flip > 0.55 ? "02 / 12" : "01 / 12";
+          return head("03", "Nossos momentos") + stage(
+            '<div class="album">' +
+              '<div class="polaroid" style="transform:rotate(-8deg);left:120px;top:80px;background:#f6efe6"><div class="ph" style="background:#6e2c3d"></div><b>a casa</b></div>' +
+              '<div class="polaroid" style="transform:rotate(6deg) translateY(' + lift.toFixed(1) + 'px);left:250px"><div class="ph" style="background:linear-gradient(160deg,#e2c27a,#8d4a3a)"></div><b>' + (flip > 0.55 ? "o sim" : "o pedido") + '</b></div>' +
+              '<div class="polaroid" style="transform:rotate(' + rot.toFixed(2) + 'deg);z-index:3"><div class="ph" style="background:' + (flip > 0.5 ? "linear-gradient(180deg,#3a1520,#c9a962)" : "linear-gradient(180deg,#f6f1e8,#6e2c3d)") + '"></div><b>' + (flip > 0.5 ? "a viagem" : "o pedido") + '</b></div>' +
+            '</div>' +
+            '<p class="meta" style="color:var(--gold);text-align:center;margin-top:8px">' + count + '</p>'
+          ) + foot("Vira a página. Igual álbum.");
+        }
+
+        function dataCena(t) {
+          var local = t - 13.2;
+          var sec = 46 + Math.floor(local * 1.6);
+          var flip = Math.sin((local * 1.6 % 1) * Math.PI);
+          var sy = 1 - 0.08 * flip;
+          return head("04", "Data e contagem") + stage(
+            '<div class="date-big">14</div>' +
+            '<div class="date-sub">novembro · 16h00</div>' +
+            '<div class="count">' +
+              cell("41", "dias") +
+              cell("08", "horas") +
+              cell("12", "min") +
+              '<div class="cell"><strong style="transform:scaleY(' + sy.toFixed(3) + ')">' + sec + '</strong><span>seg</span></div>' +
+            '</div>'
+          , "") + foot("A contagem não para.");
+        }
+
+        function cell(n, l) {
+          return '<div class="cell"><strong>' + n + '</strong><span>' + l + '</span></div>';
+        }
+
+        function mapa(t) {
+          var local = t - 16.2;
+          var drop = pop(local, 0.15, 0.7);
+          var y = (1 - drop) * -220;
+          return head("05", "Local") + stage(
+            '<div class="map">' +
+              '<svg viewBox="0 0 800 520" width="100%" height="100%" style="position:absolute;inset:0">' +
+                '<path d="M40 420 C 180 400, 200 180, 420 230 S 680 140, 760 200" fill="none" stroke="#e2c27a" stroke-width="8" stroke-linecap="round" stroke-dasharray="900" stroke-dashoffset="' + (900 * (1 - ease(inv(local, 0.1, 1.1)))).toFixed(1) + '"/>' +
+              '</svg>' +
+              '<div class="pin" style="transform:translateY(' + y.toFixed(1) + 'px)"><div class="drop"></div><div class="dot"></div></div>' +
+            '</div>' +
+            '<div class="place"><h2>Jardim Aurora</h2><p>Rua das Hortênsias, 480 · São Paulo</p></div>'
+          ) + foot("Um toque. O caminho abre.");
+        }
+
+        function traje(t) {
+          var local = t - 18.6;
+          var items = [
+            ["Blazer", "terno leve"],
+            ["Vestido", "conjunto arrumado"],
+            ["Pista", "conforto pra dançar"]
+          ];
+          var html = items.map(function (it, i) {
+            var sc = pop(local, i * 0.12, 0.38 + i * 0.12);
+            return '<div class="dress" style="transform:scale(' + sc.toFixed(3) + ') translateY(' + ((1 - sc) * 24).toFixed(1) + 'px)"><b>' + it[0] + '</b><span>' + it[1] + '</span></div>';
+          }).join("");
+          return head("06", "Traje sugerido") + stage(
+            '<div class="date-big" style="font-size:108px;margin-bottom:22px">Esporte<br>fino</div>' +
+            '<div class="cards3">' + html + '</div>'
+          ) + foot("Elegante. Solto. Pronto pra pista.");
+        }
+
+        function ritmo(t) {
+          var local = t - 20.4;
+          var grow = ease(inv(local, 0.05, 2.2));
+          var slots = [
+            [0.12, "16h", "Recepção", "boas-vindas"],
+            [0.34, "17h", "Cerimônia", "o sim no altar"],
+            [0.56, "19h30", "Jantar", "mesa longa"],
+            [0.78, "21h", "Pista", "aberta"]
+          ];
+          var html = slots.map(function (s) {
+            var on = grow > s[0] ? 1 : 0.25;
+            var y = grow > s[0] ? 0 : 16;
+            return '<div class="slot" style="opacity:' + on.toFixed(2) + ';transform:translateY(' + y + 'px)"><div class="h">' + s[1] + '</div><div><div class="w">' + s[2] + '</div><small>' + s[3] + '</small></div></div>';
+          }).join("");
+          return head("07", "Ritmo da festa") + stage(
+            '<div class="time-list"><div style="position:absolute;left:8px;top:10px;bottom:10px;width:4px;border-radius:4px;background:#e2c27a;transform:scaleY(' + grow.toFixed(3) + ');transform-origin:top center"></div>' + html + '</div>'
+          ) + foot("Quatro toques. O dia inteiro.");
+        }
+
+        function typeText(text, u) {
+          var n = Math.max(0, Math.min(text.length, Math.round(u * text.length)));
+          return text.slice(0, n);
+        }
+
+        function rsvp(t) {
+          var local = t - 23.4;
+          if (local < 2.55) {
+            var name = typeText("Marina Costa", inv(local, 0.25, 1.15));
+            var email = typeText("marina.costa@exemplo.com", inv(local, 1.15, 2.25));
+            var press = local > 2.25 ? 0.96 : 1;
+            var caretOn = Math.floor(local * 3) % 2 === 0;
+            return head("08", "Confirmar presença") + stage(
+              '<div class="form">' +
+                '<h3>Sua presença</h3>' +
+                '<p class="hint">Convite individual. Uma pessoa.</p>' +
+                '<label class="lbl">Nome completo</label>' +
+                '<div class="field">' + name + (local < 1.15 && caretOn ? '<i class="caret"></i>' : '') + '</div>' +
+                '<label class="lbl">E-mail</label>' +
+                '<div class="field">' + email + (local >= 1.15 && local < 2.25 && caretOn ? '<i class="caret"></i>' : '') + '</div>' +
+                '<div class="btn" style="transform:scale(' + press + ')">Confirmar presença</div>' +
+              '</div>'
+            ) + foot("Um nome. Um e-mail. Só o dela.");
+          }
+          var u = ease(inv(local, 2.55, 3.15));
+          var dashC = (327 * (1 - u)).toFixed(1);
+          var dashP = (80 * (1 - ease(inv(local, 2.8, 3.3)))).toFixed(1);
+          return head("08", "Confirmar presença") + stage(
+            '<div class="form success">' +
+              '<svg viewBox="0 0 120 120" width="160" height="160">' +
+                '<circle cx="60" cy="60" r="52" fill="none" stroke="#e2c27a" stroke-width="6" stroke-dasharray="327" stroke-dashoffset="' + dashC + '" stroke-linecap="round"/>' +
+                '<path d="M36 62 L54 80 L86 44" fill="none" stroke="#6e2c3d" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="80" stroke-dashoffset="' + dashP + '"/>' +
+              '</svg>' +
+              '<h3>Presença<br>confirmada</h3>' +
+              '<p>Marina Costa · 1 pessoa</p>' +
+            '</div>'
+          ) + foot("Entrou. E já pode escolher.");
+        }
+
+        function presentes(t) {
+          var local = t - 27;
+          var gifts = [
+            ["#6e2c3d", "Jogo de taças", "R$ 189", "Reservado", false],
+            ["#c9a962", "Cafeteira", "R$ 249", "Livre", true],
+            ["#8d4a3a", "Jogo de cama", "R$ 420", "Livre", true],
+            ["#3a1520", "Quadro", "R$ 160", "Reservado", false]
+          ];
+          var cards = gifts.map(function (g, i) {
+            var sc = pop(local, i * 0.08, 0.4 + i * 0.08);
+            return '<article class="gift" style="transform:scale(' + sc.toFixed(3) + ')">' +
+              '<div class="sw" style="background:' + g[0] + '"></div>' +
+              '<span class="tag' + (g[4] ? ' free' : '') + '">' + g[3] + '</span>' +
+              '<div class="bd"><b>' + g[1] + '</b><em>' + g[2] + '</em></div></article>';
+          }).join("");
+          var copied = local > 2.7;
+          var btn = copied ? "Copiado" : "Copiar Pix";
+          return head("09", "Lista de presentes") + stage(
+            '<div class="grid2">' + cards + '</div>' +
+            '<div class="pix"><div><span>Chave Pix</span><b>casal.aurora@pixdemo.com</b></div><button>' + btn + '</button></div>' +
+            '<p class="meta" style="color:var(--gold);margin-top:16px">24 itens · 18 reservados · o e-mail recupera a escolha</p>'
+          ) + foot(copied ? "Pix copiado. Sem repetir presente." : "Quem confirma, escolhe.");
+        }
+
+        function countTo(local, delay, target) {
+          return Math.round(ease(inv(local, delay, delay + 1.15)) * target);
+        }
+
+        function gestao(t) {
+          var local = t - 31.2;
+          if (local < 0.85) {
+            var dots = local < 0.22 ? "•" : local < 0.44 ? "• •" : "• • • •";
+            return head("10", "Gestão") + stage(
+              '<div class="lock"><div class="hook-kicker">acesso do casal</div><div class="hook-title" style="font-size:100px">Painel<br>fechado.</div><div class="dots" style="margin-top:28px">' + dots + '</div></div>'
+            ) + foot("Senha. Depois, a festa inteira.");
+          }
+          var pessoas = countTo(local, 0.85, 87);
+          var nPres = countTo(local, 0.92, 24);
+          var nEsc = countTo(local, 1.0, 18);
+          var pct = countTo(local, 1.08, 75);
+          var barW = (pessoas / 120) * 100;
+
+          if (local < 3.35) {
+            return head("10", "Gestão") + stage(
+              '<div class="panel">' +
+                '<div class="stat-hero"><div class="n">' + pessoas + '</div><div class="of">de 120<br>lugares</div></div>' +
+                '<div class="bar120"><span style="width:' + barW.toFixed(1) + '%"></span></div>' +
+                '<div class="mini-stats">' +
+                  '<div class="mini"><b>' + nPres + '</b><span>na lista</span></div>' +
+                  '<div class="mini"><b>' + nEsc + '</b><span>escolhidos</span></div>' +
+                  '<div class="mini"><b>' + pct + '%</b><span>reservado</span></div>' +
+                '</div>' +
+              '</div>'
+            ) + foot("Lotação ao vivo. Meta 120.");
+          }
+
+          if (local < 5.15) {
+            var toastY = (1 - pop(local, 3.35, 3.75)) * -30;
+            return head("10", "Quem pegou o quê") + stage(
+              '<div class="toast" style="transform:translateY(' + toastY.toFixed(1) + 'px)">Marina reservou <span>Jogo de taças</span></div>' +
+              '<div class="rows">' +
+                row("Jogo de taças", "Marina Costa", "saiu") +
+                row("Cafeteira", "Pedro Lima", "saiu") +
+                row("Quadro", "Ana Ribeiro", "saiu") +
+                row("Jogo de cama", "ainda na lista", "livre") +
+              '</div>'
+            ) + foot("A escolha aparece na hora.");
+          }
+
+          var added = pop(local, 5.45, 5.9);
+          return head("10", "Confirmados") + stage(
+            '<div class="rows">' +
+              row("Marina Costa", "marina.costa@exemplo.com", "sim") +
+              row("Pedro Lima", "pedro.lima@exemplo.com", "sim") +
+              row("Ana Ribeiro", "ana.ribeiro@exemplo.com", "sim") +
+              row("Caio Mendes", "caio.mendes@exemplo.com", "sim") +
+              '<div class="row" style="transform:scale(' + added.toFixed(3) + ');opacity:' + clamp(added, 0, 1).toFixed(2) + ';background:rgba(226,194,122,.16)"><div><b>Manta de sofá</b><small>R$ 180 · item novo</small></div><em>entrou</em></div>' +
+            '</div>'
+          ) + foot("Lista, gente e presente novo.");
+        }
+
+        function row(a, b, tag) {
+          return '<div class="row"><div><b>' + a + '</b><small>' + b + '</small></div><em>' + tag + '</em></div>';
+        }
+
+        function finale(t) {
+          var local = t - 38.4;
+          var words = ["Abrir", "Fotos", "Data", "Mapa", "Traje", "Ritmo", "RSVP", "Presentes", "Gestão"];
+          if (local < 2.34) {
+            var i = Math.min(words.length - 1, Math.floor(local / 0.26));
+            var u = (local - i * 0.26) / 0.26;
+            var sc = 0.86 + 0.14 * back(Math.min(1, u * 1.4));
+            return '<div class="stage" style="align-items:center;text-align:center"><div class="hook-kicker">tudo isso</div><div class="end"><div class="word" style="transform:scale(' + sc.toFixed(3) + ')">' + words[i] + '</div></div></div>' +
+              foot("Num link. Só.");
+          }
+          var u = ease(inv(local, 2.34, 2.7));
+          return '<div class="stage light-copy" style="align-items:center;text-align:center">' +
+            '<div class="end" style="opacity:' + u.toFixed(3) + ';transform:translateY(' + ((1 - u) * 20).toFixed(1) + 'px)">' +
+              '<div class="hook-kicker" style="color:#6e2c3d">convite digital</div>' +
+              '<div class="word" style="color:#241016;font-size:104px">Um link.<br>A festa inteira.</div>' +
+              '<div class="gold-rule" style="margin-left:auto;margin-right:auto"></div>' +
+              '<div class="handle">@arysson.dev</div>' +
+              '<div class="fine">pitch · dados fictícios · Helena &amp; Lucas</div>' +
+            '</div></div>';
+        }
+
+        function scene(t) {
+          if (t < 1.2) return { light: false, html: hookPdf(t) };
+          if (t < 2.4) return { light: false, html: hook3s(t) };
+          if (t < 4.2) return { light: false, html: hookEntra(t) };
+          if (t < 7.2) return { light: false, html: abertura(t) };
+          if (t < 10.2) return { light: true, html: hero(t) };
+          if (t < 13.2) return { light: false, html: album(t) };
+          if (t < 16.2) return { light: true, html: dataCena(t) };
+          if (t < 18.6) return { light: false, html: mapa(t) };
+          if (t < 20.4) return { light: true, html: traje(t) };
+          if (t < 23.4) return { light: false, html: ritmo(t) };
+          if (t < 27) return { light: true, html: rsvp(t) };
+          if (t < 31.2) return { light: false, html: presentes(t) };
+          if (t < 38.4) return { light: false, html: gestao(t) };
+          if (t < 40.74) return { light: false, html: finale(t) };
+          return { light: true, html: finale(t) };
+        }
+
+        function flash(t) {
+          var o = 0;
+          for (var i = 0; i < CUTS.length; i++) {
+            var d = t - CUTS[i];
+            if (d >= 0 && d < 0.09) o = Math.max(o, (1 - d / 0.09) * 0.42);
+          }
+          return o;
+        }
+
+        function render(t) {
+          t = clamp(t, 0, DURATION);
+          var s = scene(t);
+          document.body.className = s.light ? "light-copy" : "";
+          document.getElementById("bg").style.background = bg(s.light);
+          document.getElementById("dust").innerHTML = dust(t);
+          document.getElementById("view").innerHTML = s.html;
+          document.getElementById("flash").style.opacity = String(flash(t));
+          document.getElementById("barFill").style.width = ((t / DURATION) * 100).toFixed(2) + "%";
+          var bar = document.getElementById("bar");
+          bar.style.background = s.light ? "rgba(36,16,22,.12)" : "rgba(255,255,255,.16)";
+        }
+
+        window.__seek = function (sec) {
+          render(sec);
+          return new Promise(function (resolve) {
+            requestAnimationFrame(function () { requestAnimationFrame(resolve); });
+          });
+        };
+
+        var params = new URLSearchParams(location.search);
+        if (params.has("t")) {
+          render(parseFloat(params.get("t")) || 0);
+        } else if (params.get("freeze") === "1") {
+          render(0);
+        } else {
+          var start = performance.now();
+          function loop(now) {
+            var t = ((now - start) / 1000) % (DURATION + 0.4);
+            render(Math.min(t, DURATION));
+            requestAnimationFrame(loop);
+          }
+          requestAnimationFrame(loop);
+        }
+      })();
+    </script>
+  </body>
+</html>
