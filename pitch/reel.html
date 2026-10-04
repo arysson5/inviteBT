@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <title>Reel — Brunna &amp; Thiago</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Noto+Serif+Display:ital,wght@0,600;1,600&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --gold: #e2c27a;
@@ -23,41 +29,34 @@
       #app { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
       #bg {
         position: absolute;
-        inset: -40px;
+        inset: -90px;
         background-size: cover;
         background-position: center;
-        filter: blur(28px) brightness(0.46) saturate(1.15);
-        transform: scale(1.08);
+        filter: blur(26px) brightness(0.4) saturate(1.18);
+        transform-origin: center center;
       }
-      body.light #bg { filter: blur(30px) brightness(0.92) saturate(0.8); }
+      body.light #bg { filter: blur(18px) brightness(1.05) saturate(0.85); }
       #view { position: absolute; inset: 0; }
-      #flash {
-        position: absolute;
-        inset: 0;
-        background: #fff8ec;
-        opacity: 0;
-        mix-blend-mode: screen;
-        pointer-events: none;
-      }
       #vignette {
         position: absolute;
         inset: 0;
         pointer-events: none;
         background:
-          linear-gradient(180deg, rgba(0,0,0,.35), transparent 16%, transparent 68%, rgba(0,0,0,.55)),
-          radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.35) 100%);
+          linear-gradient(180deg, rgba(0,0,0,.42), transparent 14%, transparent 72%, rgba(0,0,0,.62)),
+          radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.38) 100%);
+        z-index: 3;
       }
-      body.light #vignette { opacity: 0.35; }
+      body.light #vignette { opacity: 0.2; }
       #bar {
         position: absolute;
         left: 64px;
         right: 64px;
-        top: 64px;
+        top: 48px;
         height: 8px;
         border-radius: 99px;
         background: rgba(255,255,255,.18);
         overflow: hidden;
-        z-index: 5;
+        z-index: 6;
       }
       #bar > span {
         display: block;
@@ -66,41 +65,53 @@
       }
       .kicker {
         position: absolute;
-        top: 100px;
+        top: 84px;
         left: 72px;
         right: 72px;
         z-index: 5;
-        letter-spacing: 0.34em;
+        letter-spacing: 0.32em;
         text-transform: uppercase;
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 600;
         color: var(--gold);
       }
       .device {
         position: absolute;
         left: 50%;
-        top: 176px;
+        top: 156px;
         width: 700px;
+        height: 1288px;
         transform-origin: center top;
-        border-radius: 36px;
+        border-radius: 40px;
         overflow: hidden;
+        background: #f6f1e8;
         box-shadow:
-          0 40px 90px rgba(0, 0, 0, 0.5),
-          0 0 0 3px rgba(226, 194, 122, 0.45);
+          0 36px 80px rgba(0, 0, 0, 0.48),
+          0 0 0 3px rgba(226, 194, 122, 0.5);
         z-index: 2;
       }
-      .device img { display: block; width: 100%; height: auto; }
+      .device img {
+        display: block;
+        width: 700px;
+        height: auto;
+        max-width: none;
+      }
+      .device img.layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
       .hook {
         position: absolute;
         left: 72px;
         right: 72px;
-        top: 520px;
+        top: 460px;
         z-index: 4;
       }
       .hook h1 {
         font-family: "Noto Serif Display", Georgia, serif;
         font-weight: 600;
-        font-size: 108px;
+        font-size: 104px;
         line-height: 0.94;
         letter-spacing: -0.03em;
       }
@@ -108,8 +119,8 @@
       .hook p {
         margin-top: 28px;
         font-size: 36px;
-        line-height: 1.3;
-        color: rgba(246, 241, 232, 0.84);
+        line-height: 1.35;
+        color: rgba(246, 241, 232, 0.86);
       }
       .foot {
         position: absolute;
@@ -117,10 +128,10 @@
         right: 0;
         bottom: 0;
         z-index: 4;
-        padding: 90px 72px 78px;
-        background: linear-gradient(180deg, transparent, rgba(12, 6, 8, 0.2) 20%, rgba(12, 6, 8, 0.88));
+        padding: 120px 72px 86px;
+        background: linear-gradient(180deg, transparent, rgba(12, 6, 8, 0.55) 28%, rgba(12, 6, 8, 0.92));
         font-family: "Noto Serif Display", Georgia, serif;
-        font-size: 52px;
+        font-size: 54px;
         line-height: 1.08;
         font-weight: 600;
       }
@@ -178,7 +189,7 @@
         justify-content: center;
         z-index: 4;
         font-family: "Noto Serif Display", Georgia, serif;
-        font-size: 120px;
+        font-size: 112px;
         font-weight: 600;
       }
     </style>
@@ -187,106 +198,236 @@
     <div id="app">
       <div id="bg"></div>
       <div id="view"></div>
-      <div id="flash"></div>
       <div id="vignette"></div>
       <div id="bar"><span id="barFill"></span></div>
     </div>
     <script>
       (function () {
-        var DURATION = 43.4;
+        var DURATION = 42.2;
         window.__DURATION = DURATION;
-        var CUTS = [1.65, 3.15, 4.55, 6.7, 9.4, 11.9, 14.3, 16.7, 18.9, 21.8, 24.2, 26.9, 29.2, 31.7, 34.4, 37, 39.16];
+        var VIEW_H = 1288;
+        var DISP = 700 / 780;
+        var NAT_H = 1688 * DISP;
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
         function inv(t, a, b) { return clamp((t - a) / (b - a), 0, 1); }
-        function ease(u) { return 1 - Math.pow(1 - clamp(u, 0, 1), 3); }
-        function back(u) {
+        function ease(u) {
           u = clamp(u, 0, 1);
-          var c = 1.25;
-          return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2);
+          return u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
         }
+        function lerp(a, b, u) { return a + (b - a) * u; }
 
         function setBg(src) {
           var bg = document.getElementById("bg");
           bg.style.backgroundImage = src ? 'url("shots/' + src + '")' : "none";
         }
 
+        function bgMotion(t) {
+          var z = 1.08 + 0.07 * (t / DURATION);
+          var x = Math.sin(t * 0.35) * 14;
+          var y = Math.cos(t * 0.27) * 10;
+          document.getElementById("bg").style.transform =
+            "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) scale(" + z.toFixed(3) + ")";
+        }
+
         function kicker(text) {
           return '<div class="kicker">' + text + "</div>";
         }
+
         function foot(text) {
           return '<div class="foot">' + text + "</div>";
         }
-        function device(src, local) {
-          var s = 0.9 + 0.1 * back(inv(local, 0, 0.42));
+
+        function phone(inner, local) {
+          var o = ease(inv(local, 0, 0.32));
+          var bob = Math.sin(local * 1.05) * 5;
           return (
-            '<div class="device" style="transform:translateX(-50%) scale(' +
-            s.toFixed(3) +
-            ')"><img src="shots/' +
+            '<div class="device" style="opacity:' +
+            o.toFixed(3) +
+            ";transform:translateX(-50%) translateY(" +
+            bob.toFixed(1) +
+            'px)">' +
+            inner +
+            "</div>"
+          );
+        }
+
+        function yOf(sourceY) {
+          return -sourceY * DISP;
+        }
+
+        function pan(src, sourceY) {
+          return (
+            '<img alt="" src="shots/' +
             src +
-            '" alt=""></div>'
+            '" style="transform:translateY(' +
+            yOf(sourceY).toFixed(2) +
+            'px)">'
+          );
+        }
+
+        function centered(src, opacity, zoom) {
+          var focal = 0.4 * NAT_H;
+          var y = VIEW_H * 0.46 - focal * zoom;
+          return (
+            '<img class="layer" alt="" src="shots/' +
+            src +
+            '" style="opacity:' +
+            opacity.toFixed(3) +
+            ";transform:translateY(" +
+            y.toFixed(1) +
+            "px) scale(" +
+            zoom.toFixed(3) +
+            ');transform-origin:center top">'
+          );
+        }
+
+        function ken(src, u, y0, y1) {
+          var y = lerp(y0, y1, u);
+          var z = lerp(1.04, 1.14, u);
+          var originY = 180 + u * 220;
+          return (
+            '<img alt="" src="shots/' +
+            src +
+            '" style="transform:translateY(' +
+            y.toFixed(1) +
+            "px) scale(" +
+            z.toFixed(3) +
+            ");transform-origin:50% " +
+            originY.toFixed(0) +
+            'px">'
           );
         }
 
         function hook(t) {
           setBg("envelope.jpg");
-          var s = 1.04 - 0.04 * ease(inv(t, 0, 0.4));
+          var rise = (1 - ease(inv(t, 0, 1.2))) * 36;
+          var line = ease(inv(t, 0.35, 1.05));
           return (
-            '<div class="hook" style="transform:scale(' +
-            s.toFixed(3) +
-            ');transform-origin:left center">' +
-            '<div class="kicker" style="position:static;margin-bottom:24px">o pedido</div>' +
-            "<h1>Eles me pediram um convite.</h1>" +
-            "<p>Não um PDF. Um link que a pessoa abre.</p></div>" +
+            '<div class="hook" style="transform:translateY(' +
+            rise.toFixed(1) +
+            'px)">' +
+            '<div class="kicker" style="position:static;margin-bottom:22px">o pedido</div>' +
+            "<h1>Eles me pediram<br>um convite.</h1>" +
+            '<p style="opacity:' +
+            line.toFixed(3) +
+            ';transform:translateY(' +
+            ((1 - line) * 16).toFixed(1) +
+            'px)">Não um PDF. Um link que a pessoa abre.</p></div>' +
             foot("Olha o que eu fiz.")
           );
         }
 
-        function reveal(t) {
-          var local = t - 1.65;
-          setBg("envelope.jpg");
+        function opening(t) {
+          var local = t - 1.5;
+          var beats = [
+            { t: 0, f: 0, z: 1.55 },
+            { t: 0.9, f: 0, z: 1.72 },
+            { t: 1.4, f: 1, z: 1.82 },
+            { t: 2.05, f: 12, z: 1.62 },
+            { t: 2.75, f: 14, z: 1.52 },
+            { t: 3.3, f: 18, z: 1.72 },
+            { t: 4.1, f: 22, z: 1.62 },
+            { t: 4.9, f: 30, z: 1.55 },
+          ];
+          var i = 0;
+          while (i < beats.length - 2 && local >= beats[i + 1].t) i++;
+          var a = beats[i];
+          var b = beats[i + 1];
+          var u = ease(inv(local, a.t, b.t));
+          var z = lerp(a.z, b.z, u);
+          var n = function (frame) { return String(frame).padStart(2, "0"); };
+          setBg("open/open_" + n(a.f) + ".jpg");
+          var label = "01 · abertura";
+          var line = "O envelope abre sozinho.";
+          if (local >= 1.45 && local < 2.85) {
+            label = "02 · monograma";
+            line = "O selo vira a marca dos dois.";
+          } else if (local >= 2.85) {
+            label = "03 · a carta";
+            line = "Brunna &amp; Thiago saem do envelope.";
+          }
           return (
-            kicker("01 · abertura") +
-            device("envelope.jpg", local) +
-            foot("O envelope é o gancho.")
+            kicker(label) +
+            phone(
+              centered("open/open_" + n(a.f) + ".jpg", 1 - u, z) +
+                centered("open/open_" + n(b.f) + ".jpg", u, z),
+              local
+            ) +
+            foot(line)
           );
         }
 
-        function shot(t, start, src, label, line) {
-          var local = t - start;
-          setBg(src);
-          return kicker(label) + device(src, local) + foot(line);
+        function convite(t) {
+          var local = t - 6.4;
+          var u = ease(inv(local, 0, 7.5));
+          var sourceY = lerp(1680, 3360, u);
+          var label, line;
+          if (sourceY < 2300) {
+            label = "03 · o convite";
+            line = "A frase. O nome. A foto.";
+          } else if (sourceY < 3000) {
+            label = "04 · momentos";
+            line = "Vira a página. São dezesseis.";
+          } else {
+            label = "05 · quando";
+            line = "13 de junho de 2026 · 13h.";
+          }
+          setBg("long/convite.jpg");
+          return kicker(label) + phone(pan("long/convite.jpg", sourceY), local) + foot(line);
         }
 
-        function finaleWords(t) {
-          var local = t - 37;
-          var words = ["Abrir", "Fotos", "Data", "Mapa", "Traje", "Ritmo", "RSVP", "Presentes", "Gestão"];
-          var i = Math.min(words.length - 1, Math.floor(local / 0.24));
-          var u = (local - i * 0.24) / 0.24;
-          var s = 0.86 + 0.14 * back(Math.min(1, u * 1.3));
+        function stillBeat(t, start, dur, src, label, line, y0, y1) {
+          var local = t - start;
+          var u = ease(inv(local, 0, dur));
+          setBg(src);
+          return kicker(label) + phone(ken(src, u, y0, y1), local) + foot(line);
+        }
+
+        function admin(t) {
+          var local = t - 28.7;
+          var u = ease(inv(local, 0, 4.9));
+          var sourceY = lerp(0, 1080, u);
+          var line = sourceY < 520 ? "Lotação do salão. Meta 120." : "Presente, escolha e confirmados.";
+          var label = sourceY < 520 ? "12 · gestão" : "13 · o painel";
+          setBg("long/admin.jpg");
+          return kicker(label) + phone(pan("long/admin.jpg", sourceY), local) + foot(line);
+        }
+
+        function words(t) {
+          var local = t - 33.8;
+          var list = ["Fotos", "RSVP", "Pix", "Gestão"];
+          var each = 2.55 / list.length;
+          var i = Math.min(list.length - 1, Math.floor(local / each));
+          var u = (local - i * each) / each;
+          var o = u < 0.18 ? u / 0.18 : u > 0.82 ? (1 - u) / 0.18 : 1;
+          var y = (1 - ease(Math.min(1, u * 1.6))) * 26;
           setBg("hero.jpg");
           return (
-            '<div class="word" style="transform:scale(' +
-            s.toFixed(3) +
-            ')">' +
-            words[i] +
+            '<div class="word" style="opacity:' +
+            clamp(o, 0, 1).toFixed(3) +
+            ";transform:translateY(" +
+            y.toFixed(1) +
+            'px)">' +
+            list[i] +
             "</div>" +
             foot("Tudo isso. Num link.")
           );
         }
 
         function endCard(t) {
-          var local = t - 39.16;
-          var u = ease(inv(local, 0, 0.35));
+          var local = t - 36.4;
+          var u = ease(inv(local, 0, 0.7));
+          var z = lerp(0.96, 1.03, ease(inv(local, 0, 5.4)));
           setBg("");
           document.getElementById("bg").style.backgroundImage =
-            "linear-gradient(180deg,#fbf6ef,#f3e6d8)";
+            "linear-gradient(165deg,#fbf6ef 0%,#f3e4d4 55%,#e7d3c4 100%)";
           return (
             '<div class="end" style="opacity:' +
             u.toFixed(3) +
-            ";transform:translateY(" +
-            ((1 - u) * 16).toFixed(1) +
-            'px)">' +
+            ";transform:scale(" +
+            z.toFixed(3) +
+            ')">' +
             '<div class="eyebrow">convite digital</div>' +
             "<h1>Um link.<br>A festa inteira.</h1>" +
             '<div class="rule"></div>' +
@@ -297,33 +438,48 @@
         }
 
         function scene(t) {
-          if (t < 1.65) return { light: false, html: hook(t) };
-          if (t < 3.15) return { light: false, html: reveal(t) };
-          if (t < 4.55) return { light: false, html: shot(t, 3.15, "open_08.jpg", "02 · monograma", "O selo vira a marca dos dois.") };
-          if (t < 6.7) return { light: false, html: shot(t, 4.55, "open_27.jpg", "03 · a carta", "Brunna & Thiago saem do envelope.") };
-          if (t < 9.4) return { light: false, html: shot(t, 6.7, "hero.jpg", "04 · o convite", "A frase. O nome. A foto.") };
-          if (t < 11.9) return { light: false, html: shot(t, 9.4, "album.jpg", "05 · momentos", "Vira a página. São 16.") };
-          if (t < 14.3) return { light: false, html: shot(t, 11.9, "data.jpg", "06 · quando", "13 de junho de 2026 · 13h.") };
-          if (t < 16.7) return { light: false, html: shot(t, 14.3, "mapa.jpg", "07 · onde", "Buffet Fest Vip. O mapa abre.") };
-          if (t < 18.9) return { light: false, html: shot(t, 16.7, "traje.jpg", "08 · traje", "Esporte fino. Pronto pra pista.") };
-          if (t < 21.8) return { light: false, html: shot(t, 18.9, "citacao.jpg", "09 · ritmo", "13h, 14h, 16h e 18h.") };
-          if (t < 24.2) return { light: false, html: shot(t, 21.8, "rsvp-cta.jpg", "10 · a chamada", "Presença e lista, no mesmo fluxo.") };
-          if (t < 26.9) return { light: false, html: shot(t, 24.2, "rsvp.jpg", "11 · rsvp", "Um convite. Uma pessoa.") };
-          if (t < 29.2) return { light: false, html: shot(t, 26.9, "presentes-gate.jpg", "12 · presentes", "Confirma. Aí escolhe.") };
-          if (t < 31.7) return { light: false, html: shot(t, 29.2, "presentes-pix.jpg", "13 · pix", "A chave está no convite.") };
-          if (t < 34.4) return { light: false, html: shot(t, 31.7, "admin-stats.jpg", "14 · gestão", "Lotação do salão. Meta 120.") };
-          if (t < 37) return { light: false, html: shot(t, 34.4, "admin-form.jpg", "15 · o painel", "Presente, escolha e confirmados.") };
-          if (t < 39.16) return { light: false, html: finaleWords(t) };
-          return { light: true, html: endCard(t) };
-        }
-
-        function flash(t) {
-          var o = 0;
-          for (var i = 0; i < CUTS.length; i++) {
-            var d = t - CUTS[i];
-            if (d >= 0 && d < 0.08) o = Math.max(o, (1 - d / 0.08) * 0.4);
+          if (t < 1.5) return { light: false, html: hook(t) };
+          if (t < 6.4) return { light: false, html: opening(t) };
+          if (t < 14.0) return { light: false, html: convite(t) };
+          if (t < 16.4) {
+            return {
+              light: false,
+              html: stillBeat(t, 14.0, 2.3, "mapa.jpg", "06 · onde", "Buffet Fest Vip. O mapa abre.", -20, -160),
+            };
           }
-          return o;
+          if (t < 18.5) {
+            return {
+              light: false,
+              html: stillBeat(t, 16.4, 2.0, "traje.jpg", "07 · traje", "Esporte fino. Pronto pra pista.", -430, -500),
+            };
+          }
+          if (t < 21.2) {
+            return {
+              light: false,
+              html: stillBeat(t, 18.5, 2.6, "citacao.jpg", "08 · ritmo", "13h, 14h, 16h e 18h.", 0, -90),
+            };
+          }
+          if (t < 23.7) {
+            return {
+              light: false,
+              html: stillBeat(t, 21.2, 2.4, "long/rsvp.jpg", "09 · rsvp", "Um convite. Uma pessoa.", 0, -40),
+            };
+          }
+          if (t < 26.1) {
+            return {
+              light: false,
+              html: stillBeat(t, 23.7, 2.3, "long/presentes.jpg", "10 · presentes", "Confirma. Aí escolhe.", 0, -50),
+            };
+          }
+          if (t < 28.7) {
+            return {
+              light: false,
+              html: stillBeat(t, 26.1, 2.5, "long/pix.jpg", "11 · pix", "A chave está no convite.", -20, -80),
+            };
+          }
+          if (t < 33.8) return { light: false, html: admin(t) };
+          if (t < 36.4) return { light: false, html: words(t) };
+          return { light: true, html: endCard(t) };
         }
 
         function render(t) {
@@ -331,14 +487,14 @@
           var s = scene(t);
           document.body.className = s.light ? "light" : "";
           document.getElementById("view").innerHTML = s.html;
-          document.getElementById("flash").style.opacity = String(flash(t));
+          bgMotion(t);
           document.getElementById("barFill").style.width = ((t / DURATION) * 100).toFixed(2) + "%";
         }
 
         window.__seek = function (sec) {
           render(sec);
           var pending = Array.prototype.map.call(document.images, function (img) {
-            if (img.complete) return Promise.resolve();
+            if (img.complete && img.naturalWidth) return Promise.resolve();
             return img.decode ? img.decode().catch(function () {}) : Promise.resolve();
           });
           return Promise.all(pending).then(function () {

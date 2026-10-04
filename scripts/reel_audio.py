@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
-"""Cama sonora sintética, sem amostra de terceiros, alinhada ao reel de 43.8s."""
+"""Base contínua, sem percussão e sem whoosh. Ataque suave para não estalar."""
 
 import math
-import random
 import struct
 import wave
 
 SR = 44100
-DUR = 43.4
+DUR = 42.2
 N = int(SR * DUR)
 buf = [0.0] * N
-rnd = random.Random(11)
-BPM = 100.0
-BEAT = 60.0 / BPM
 
 
 def add(i, v):
@@ -20,14 +16,42 @@ def add(i, v):
         buf[i] += v
 
 
-def add_tone(t0, freq, dur, amp, decay):
-    start = int(t0 * SR)
+def envelope(t, dur, attack):
+    if t < 0 or t > dur:
+        return 0.0
+    if t < attack:
+        return 0.5 - 0.5 * math.cos(math.pi * t / attack)
+    if t > dur - attack:
+        return 0.5 - 0.5 * math.cos(math.pi * (dur - t) / attack)
+    return 1.0
+
+
+def add_pad(t0, dur, freqs, amp, attack=0.7):
     samples = int(dur * SR)
+    start = int(t0 * SR)
     for n in range(samples):
         t = n / SR
-        env = math.exp(-t / decay) * (1 - math.exp(-t / 0.008))
-        s = math.sin(2 * math.pi * freq * t) + 0.28 * math.sin(2 * math.pi * freq * 2 * t)
-        add(start + n, s * env * amp)
+        env = envelope(t, dur, attack)
+        sample = 0.0
+        for freq in freqs:
+            sample += math.sin(2 * math.pi * freq * t)
+            sample += 0.22 * math.sin(2 * math.pi * freq * 2 * t + 0.4)
+        sample /= len(freqs) * 1.22
+        add(start + n, sample * env * amp)
+
+
+def add_note(t0, freq, dur, amp):
+    attack = 0.11
+    samples = int(dur * SR)
+    start = int(max(0, t0) * SR)
+    for n in range(samples):
+        if start + n >= N:
+            break
+        t = n / SR
+        env = envelope(t, dur, attack) * math.exp(-t / 1.35)
+        sample = math.sin(2 * math.pi * freq * t)
+        sample += 0.18 * math.sin(2 * math.pi * freq * 2 * t)
+        add(start + n, sample * env * amp)
 
 
 CHORDS = [
@@ -37,70 +61,29 @@ CHORDS = [
     (196.00, 246.94, 293.66),
 ]
 
-n_beats = int(DUR / BEAT) + 1
-for b in range(n_beats):
-    t0 = b * BEAT
-    if t0 >= DUR:
+# Acordes se cruzam. Sem batida, sem ruído.
+step = 7.2
+overlap = 1.1
+t = 0.0
+index = 0
+while t < DUR:
+    add_pad(t, step + overlap, CHORDS[index % 4], 0.11, attack=0.85)
+    t += step
+    index += 1
+
+# Melodia espaçada, ataque longo o bastante para não "pular".
+MELODY = [329.63, 392.00, 440.00, 392.00, 349.23, 329.63, 293.66, 329.63]
+note_every = 1.45
+for i, freq in enumerate(MELODY * 6):
+    start = 0.8 + i * note_every
+    if start > DUR - 1.2:
         break
-    chord = CHORDS[(b // 4) % 4]
-    if b % 2 == 0:
-        for freq in chord:
-            add_tone(t0, freq, 0.85, 0.055, 0.26)
-    else:
-        add_tone(t0, chord[2] * 2, 0.35, 0.03, 0.16)
-
-    if t0 >= 31.7 and t0 < 37.0 and b % 2 == 0:
-        add_tone(t0, chord[1] * 2, 0.45, 0.045, 0.18)
-
-    if b % 4 in (0, 2):
-        samples = int(0.2 * SR)
-        start = int(t0 * SR)
-        phase = 0.0
-        for n in range(samples):
-            t = n / SR
-            freq = 86 * math.exp(-t * 16) + 40
-            phase += 2 * math.pi * freq / SR
-            env = math.exp(-t * 14)
-            add(start + n, math.sin(phase) * env * 0.48)
-
-    if b % 4 == 2:
-        samples = int(0.1 * SR)
-        start = int(t0 * SR)
-        for n in range(samples):
-            t = n / SR
-            env = math.exp(-t * 30)
-            add(start + n, (rnd.random() * 2 - 1) * env * 0.12)
-
-    samples = int(0.035 * SR)
-    start = int(t0 * SR)
-    for n in range(samples):
-        t = n / SR
-        env = math.exp(-t * 90)
-        add(start + n, (rnd.random() * 2 - 1) * env * 0.035)
-
-CUTS = [1.65, 3.15, 4.55, 6.7, 9.4, 11.9, 14.3, 16.7, 18.9, 21.8, 24.2, 26.9, 29.2, 31.7, 34.4, 37.0, 39.16]
-for cut in CUTS:
-    samples = int(0.16 * SR)
-    start = int(max(0, cut - 0.02) * SR)
-    for n in range(samples):
-        t = n / SR
-        env = math.sin(math.pi * min(1.0, t / 0.16))
-        freq = 420 + t * 1600
-        add(start + n, math.sin(2 * math.pi * freq * t) * env * 0.035)
-
-swell_start = int(39.16 * SR)
-for n in range(int(3.6 * SR)):
-    t = n / SR
-    env = min(1.0, t / 0.35) * (1 - min(1.0, max(0.0, t - 2.9) / 0.7))
-    s = (
-        math.sin(2 * math.pi * 220 * t)
-        + math.sin(2 * math.pi * 277.18 * t)
-        + math.sin(2 * math.pi * 329.63 * t)
-    ) / 3
-    add(swell_start + n, s * env * 0.1)
+    add_note(start, freq, 1.7, 0.03)
+    if i % 2 == 0:
+        add_note(start + 0.02, freq / 2, 2.1, 0.03)
 
 peak = max(abs(x) for x in buf) or 1.0
-scale = 0.9 / peak
+scale = 0.86 / peak
 
 with wave.open("/tmp/reel-bed.wav", "w") as handle:
     handle.setnchannels(1)
@@ -108,12 +91,12 @@ with wave.open("/tmp/reel-bed.wav", "w") as handle:
     handle.setframerate(SR)
     chunk = []
     for i, sample in enumerate(buf):
-        t = i / SR
+        time = i / SR
         fade = 1.0
-        if t < 0.06:
-            fade = t / 0.06
-        if t > DUR - 0.45:
-            fade = max(0.0, (DUR - t) / 0.45)
+        if time < 0.8:
+            fade = 0.5 - 0.5 * math.cos(math.pi * time / 0.8)
+        if time > DUR - 1.1:
+            fade *= max(0.0, (DUR - time) / 1.1)
         value = int(sample * scale * fade * 32767)
         value = max(-32767, min(32767, value))
         chunk.append(struct.pack("<h", value))
